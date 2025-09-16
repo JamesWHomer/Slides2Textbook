@@ -17,12 +17,17 @@ SYSTEM_PROMPT = ("You are a textbook chapter creator. Given a possibly badly str
     "Respond in markdown format and assume that your response will be included in the chapter, "
     "so do not respond with anything but the textbook. "
     "Do not include unecessary artifacts from the previous format such as page numbers or repeated information such as headers. "
-    "Do not include extra features such as exercises unless they are explicitely shown in the slides. Remember your tasks is to create a chapter based on slides, not a chapter itself."
+    "Do not include extra features such as exercises unless they are explicitely shown in the slides. Remember your tasks is to create a chapter based on slides, not a chapter itself. "
+    "Note that a transcript will also possibly be attached from any lecture using that slide. Use the information to augment and determine what other information to include. "
     )
 
+def context_creator(**contexts):
+    context = ""
+    for key, value in contexts.items():
+        context += f"{key}:\n{value}\n\n"
+    return context
 
-
-def get_chapter(md):
+def to_chapter(context):
     response = client.responses.create(
     model="gpt-5-nano",
     input=[
@@ -40,7 +45,7 @@ def get_chapter(md):
         "content": [
             {
             "type": "input_text",
-            "text": md
+            "text": context
             }
         ]
         }
