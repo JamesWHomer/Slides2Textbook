@@ -7,6 +7,9 @@ import mdToPdf
 def main():
     print("Starting SlidesToTextbook")
     md = pdf_decoder.to_md("06-LogicalDesignTheory-2025-v1.pdf")
+    trans = text_loader.load_txt("Week 06 - Data and I-transcript.txt")
+    context = llm_tools.context_creator(markdown_file=md, transcript=trans)
+    print(context)
     print("Converted slides to markdown file")
     chapter = llm_tools.to_chapter(context)
     print("Converted slides to longform textbook")

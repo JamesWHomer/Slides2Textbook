@@ -20,7 +20,11 @@ SYSTEM_PROMPT = ("You are a textbook chapter creator. Given a possibly badly str
     "Do not include extra features such as exercises unless they are explicitely shown in the slides. Remember your tasks is to create a chapter based on slides, not a chapter itself."
     )
 
-
+def context_creator(**contexts):
+    context = ""
+    for key, value in contexts.items():
+        context += f"{key}:\n{value}\n\n"
+    return context
 
 def to_chapter(context):
     response = client.responses.create(
