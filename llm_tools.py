@@ -22,7 +22,7 @@ SYSTEM_PROMPT = ("You are a textbook chapter creator. Given a possibly badly str
 
 
 
-def get_chapter(md):
+def to_chapter(context):
     response = client.responses.create(
     model="gpt-5-nano",
     input=[
