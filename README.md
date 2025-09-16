@@ -1,5 +1,10 @@
-Just a basic pdf to textbook framework.
+# Slides To Textbook
 
-Right now this is just a proof of concept but I'm considering turning this into a fastapi server and creating a website for a converter. 
+Question: What is this?  
+Answer: A simple experiment to turn unstructured context such as pdf's or transcripts into textbooks.
 
-Right now it's text only however I intend on (maybe?) adding an option for image context. However pdf's really mess up images so I don't know.
+Question: What about images?  
+Answer: I intend on eventually implementing images however we'll see eventually. I've found that often images in pdf's are really badly structured, I'm thinking about using the whole page of a slide as context, etc, however there is a lot to consider.
+
+Question: What is your goal?  
+Answer: I'm considering turning this into a fastapi server to eventually be used in a product, I'm thinking a simple website converter.
