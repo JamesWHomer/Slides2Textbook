@@ -3,6 +3,7 @@ import pdf_decoder
 import llm_tools
 import md_saver
 import mdToPdf
+import text_loader
 
 def main():
     print("Starting SlidesToTextbook")
