@@ -1,4 +1,5 @@
 # The main orchestrator.
+from pydoc import text
 import pdf_decoder
 import llm_tools
 import md_saver
@@ -14,10 +15,10 @@ def main():
     print("Converted slides to markdown file")
     chapter = llm_tools.to_chapter(context)
     print("Converted slides to longform textbook")
-    md_saver.save_md(chapter, "output", "textbook")
+    md_saver.save_md(chapter, "output", "textbook_with_speech")
     print("Saved markdown file of textbook")
-    mdToPdf.mdToPdf(chapter, "output", "textbook")
-    # print(chapter)
+    mdToPdf.mdToPdf(chapter, "output", "textbook_with_speech")
+    print(chapter)
 
 if __name__ == "__main__":
     main()

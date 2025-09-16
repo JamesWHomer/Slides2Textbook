@@ -175,4 +175,4 @@ cython_debug/
 
 # Project specific
 /output
-*.pdf
+/input
