@@ -1,4 +1,4 @@
-# Slides To Textbook
+# Slides2Textbook
 
 Question: What is this?  
 Answer: A simple experiment to turn unstructured context such as pdf's or transcripts into textbooks.
