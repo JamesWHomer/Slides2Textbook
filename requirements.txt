@@ -1,4 +1,4 @@
 openai
 python-dotenv
-pdfplumber
-fpdf 
+markdown-pdf
+pymupdf4llm
