@@ -32,7 +32,7 @@ def context_creator(**contexts):
 
 def to_chapter(context):
     response = client.responses.create(
-    model="gpt-5-nano",
+    model="gpt-5",
     input=[
         {
         "role": "developer",
