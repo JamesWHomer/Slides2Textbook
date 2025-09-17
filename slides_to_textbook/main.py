@@ -2,7 +2,7 @@
 import pdf_decoder
 import llm_tools
 import md_saver
-import mdToPdf
+import md_to_pdf
 import text_loader
 
 def main():
@@ -16,7 +16,7 @@ def main():
     chapter = llm_tools.to_chapter(context)
     print("Converted slides to longform textbook")
     md_saver.save_md(chapter, "output", "2922_lecture7_trans")
-    mdToPdf.mdToPdf(chapter, "output", "2922_lecture7_trans")
+    md_to_pdf.mdToPdf(chapter, "output", "2922_lecture7_trans")
     print("Saved markdown file and pdf.")
 
 if __name__ == "__main__":
