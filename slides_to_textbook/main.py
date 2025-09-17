@@ -1,9 +1,9 @@
 # The main orchestrator.
-import pdf_decoder
-import llm_tools
-import md_saver
-import md_to_pdf
-import text_loader
+from slides_to_textbook import pdf_decoder
+from slides_to_textbook import llm_tools
+from slides_to_textbook import md_saver
+from slides_to_textbook import md_to_pdf
+from slides_to_textbook import text_loader
 
 def main():
     print("Starting SlidesToTextbook, now loading context.")
