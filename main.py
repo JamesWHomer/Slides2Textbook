@@ -6,18 +6,18 @@ import mdToPdf
 import text_loader
 
 def main():
-    print("Starting SlidesToTextbook")
-    md = pdf_decoder.to_md("06-LogicalDesignTheory-2025-v1.pdf")
-    trans = text_loader.load_txt("Week 06 - Data and I-transcript.txt")
-    context = llm_tools.context_creator(markdown_file=md, transcript=trans)
-    print(context)
-    print("Converted slides to markdown file")
+    print("Starting SlidesToTextbook, now loading context.")
+    md = pdf_decoder.to_md("input\L - week 7 - intro to Turing Machines.pdf")
+    trans = text_loader.load_txt("input\Week 07 - Models of -transcript.txt")
+    # context = llm_tools.context_creator(markdown_file=md, transcript=trans)
+    context = llm_tools.context_creator(transcript=trans)
+    # print(context)
+    print("Loaded context, beginning to generate chapter.")
     chapter = llm_tools.to_chapter(context)
     print("Converted slides to longform textbook")
-    md_saver.save_md(chapter, "output", "textbook_with_speech")
-    print("Saved markdown file of textbook")
-    mdToPdf.mdToPdf(chapter, "output", "textbook_with_speech")
-    print(chapter)
+    md_saver.save_md(chapter, "output", "2922_lecture7_trans")
+    mdToPdf.mdToPdf(chapter, "output", "2922_lecture7_trans")
+    print("Saved markdown file and pdf.")
 
 if __name__ == "__main__":
     main()
