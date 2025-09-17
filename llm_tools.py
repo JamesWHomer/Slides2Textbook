@@ -19,6 +19,9 @@ SYSTEM_PROMPT = ("You are a textbook chapter creator. Given a possibly badly str
     "Do not include unecessary artifacts from the previous format such as page numbers or repeated information such as headers. "
     "Do not include extra features such as exercises unless they are explicitely shown in the slides. Remember your tasks is to create a chapter based on slides, not a chapter itself. "
     "Note that a transcript will also possibly be attached from any lecture using that slide. Use the information to augment and determine what other information to include. "
+    "Note that you will not able to see any images or create any images. "
+    "The textbook chapter should be considered standalone. "
+    "Do not start with a preamble, go into the textbook chapter immediately. "
     )
 
 def context_creator(**contexts):
