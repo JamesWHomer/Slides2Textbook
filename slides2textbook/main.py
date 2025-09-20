@@ -4,6 +4,8 @@ from slides2textbook import llm_tools
 from slides2textbook import md_saver
 from slides2textbook import md_to_pdf
 from slides2textbook import text_loader
+import argparse
+from pathlib import Path
 
 def main():
     print("Starting SlidesToTextbook, now loading context.")
@@ -25,6 +27,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--pdf", required=True, type=existing_file, help="Path to input slides PDF")
     return parser
+
+def existing_file(path_str: str) -> Path:
+    p = Path(path_str)
+    if not p.is_file():
+        raise argparse.ArgumentTypeError(f"{p} does not exist or is not a file")
+    return p
 
 if __name__ == "__main__":
     main()
