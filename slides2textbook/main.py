@@ -13,10 +13,15 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args()
     # TODO: configure logging
 
-    print(args)
-
-    name = args.name or args.pdf.stem
-
+    if args.name:
+        name = args.name
+    elif args.pdf:
+        name = args.pdf.stem
+    elif args.txt:
+        name = args.txt.stem
+    else:
+        name = "textbook"
+        
     try:
         run_pipeline(
             pdf=args.pdf,
