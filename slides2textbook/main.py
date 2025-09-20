@@ -17,5 +17,14 @@ def main():
     md_to_pdf.mdToPdf(chapter, "output", "ISYS7")
     print("Saved markdown file and pdf.")
 
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog='Slides2Textbook',
+        description="Allows you to convert pdf's and other context into high quality textbooks.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("--pdf", required=True, type=existing_file, help="Path to input slides PDF")
+    return parser
+
 if __name__ == "__main__":
     main()
