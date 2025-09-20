@@ -26,6 +26,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--pdf", required=True, type=existing_file, help="Path to input slides PDF")
+    parser.add_argument("-o", "--out-dir", type=Path, default=Path("output"), help="Directory to place outputs")
+    parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
     return parser
 
 def existing_file(path_str: str) -> Path:
