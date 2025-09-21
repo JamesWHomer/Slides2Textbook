@@ -42,8 +42,8 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
 
     print("Starting SlidesToTextbook, now loading context.")
     # TODO: modify to_md and load_txt to accept Path
-    md = pdf_decoder.to_md(str(pdf)) if pdf else ""
-    trans = text_loader.load_txt(str(txt)) if txt else ""
+    md = pdf_decoder.to_md(pdf) if pdf else ""
+    trans = text_loader.load_txt(txt) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
     print("Loaded context, beginning to generate chapter.")

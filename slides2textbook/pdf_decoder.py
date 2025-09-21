@@ -21,9 +21,8 @@ import pymupdf4llm as pf
 # print(f"Saved Markdown to {out_dir} and images to {images_dir}")
 
 def to_md(path):
-    pdf_path = Path(path)
     return pf.to_markdown(
-        str(pdf_path),
+        str(path),
         # write_images=False,
         # image_path=str(images_dir),
         # image_format="png",
