@@ -1,4 +1,5 @@
 # The main orchestrator.
+import logging
 from dataclasses import make_dataclass
 from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
@@ -7,6 +8,8 @@ from slides2textbook import md_to_pdf
 from slides2textbook import text_loader
 import argparse
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
@@ -40,24 +43,24 @@ def main(argv: list[str] | None = None) -> None:
 def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Starting SlidesToTextbook, now loading context.")
+    logger.info("Starting SlidesToTextbook, now loading context.")
     # TODO: modify to_md and load_txt to accept Path
     md = pdf_decoder.to_md(str(pdf)) if pdf else ""
     trans = text_loader.load_txt(str(txt)) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
-    print("Loaded context, beginning to generate chapter.")
+    logger.info("Loaded context, beginning to generate chapter.")
     chapter = llm_tools.to_chapter(context)
-    print("Converted slides to longform textbook")
+    logger.info("Converted slides to longform textbook")
     
     if save_md:
         md_saver.save_md(chapter, str(out_dir), name)
-        print("Saved markdown to %s/%s", out_dir, name)
+        logger.info("Saved markdown to %s/%s", out_dir, name)
     if (make_pdf):
         md_to_pdf.mdToPdf(chapter, str(out_dir), name)
-        print("Saved PDF to %s/%s", out_dir, name)
+        logger.info("Saved PDF to %s/%s", out_dir, name)
     if not save_md and not make_pdf:
-        print("Nothing saved as both --no-md and --no-pdf flags were set. ")
+        logger.info("Nothing saved as both --no-md and --no-pdf flags were set. ")
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
