@@ -1,33 +1,44 @@
-# The purpose of this is to eventually enable a way for users to modify what strings get included in the system prompt.
+from typing import Sequence
 
-def get_system(idx: list[int]):
-    return bullet_prompt_builder([get_promp_string(id) for id in idx])
+def build_system_prompt(keys: Sequence[str] | None = None) -> str:
+    """
+    Build the system/developer prompt as bullets.
 
-def bullet_prompt_builder(prompts: list[str]) -> str:
-    prompt = ""
-    for s in prompts:
-        prompt += f" - {s}\n"
-    return prompt
+    - keys=None: include all rules in defined order.
+    - keys provided: include only those rules, in the order given; raises on unknown keys.
+    """
+    if keys is None:
+        items = RULES.items()
+    else:
+        _validate_keys(keys)
+        items = ((k, RULES[k]) for k in keys)
+    return "\n".join(f"- {text}" for _, text in items)
 
-def get_promp_string(idx: int) -> str:
-    match idx:
-        case 0:
-            return ("You are a textbook chapter creator. Given a possibly badly structured markdown file likely created from pdf's/slides "
-    "and missing information such as images, you will attempt to the best of your ability to create a high quality textbook chapter "
-    "of the slides/notes in the markdown file provided, aiming to best educate the reader.")
-        case 1:
-            return "Base the textbook heavily off of the slides, do not miss any information or go too off topic from the textbook unless necessary."
-        case 2:
-            return "Respond in markdown format and assume that your response will be included in the chapter, so do not respond with anything but the textbook."
-        case 3:
-            return "Do not include unecessary artifacts from the previous format such as page numbers or repeated information such as headers."
-        case 4:
-            return "Do not include extra features such as exercises unless they are explicitely shown in the slides. Remember your tasks is to create a chapter based on slides, not a chapter itself."
-        case 5:
-            return "Note that a transcript will also possibly be attached from any lecture using that slide. Use the information to augment and determine what other information to include."
-        case 6:
-            return "Note that you will not able to see any images or create any images."
-        case 7:
-            return "The textbook chapter should be considered standalone."
-        case 8:
-            return "Do not start with a preamble, go into the textbook chapter immediately."
+
+def available_rule_keys() -> list[str]:
+    return list(RULES.keys())
+
+def _validate_keys(keys: Sequence[str]) -> None:
+    missing = [k for k in keys if k not in RULES]
+    if missing:
+        raise ValueError(f"Unknown rule keys: {missing}. Available: {list(RULES)}")
+
+RULES: dict[str, str] = {
+    "role": (
+        "You are a textbook chapter creator. Given a possibly poorly structured markdown file likely created from PDFs/slides "
+        "and missing information such as images, produce a high-quality textbook chapter that best educates the reader."
+    ),
+    "fidelity": "Base the textbook heavily on the slides; do not omit information or go off topic unless necessary.",
+    "markdown_only": "Respond only in Markdown. Do not output anything except the textbook.",
+    "no_artifacts": "Do not include unnecessary artifacts such as page numbers or repeated headers.",
+    "no_extras": (
+        "Do not include extra features such as exercises unless they are explicitly shown in the slides. "
+        "Your task is to create a chapter based on slides, not to add extras."
+    ),
+    "use_transcript": (
+        "A transcript may be attached for the lecture using those slides; use it to augment and decide what additional information to include."
+    ),
+    "no_images": "You will not be able to see or create images.",
+    "standalone": "The textbook chapter should be standalone.",
+    "no_preamble": "Do not start with a preamble; begin the textbook chapter immediately.",
+}

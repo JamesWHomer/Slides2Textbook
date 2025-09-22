@@ -11,7 +11,7 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-SYSTEM_PROMPT = pb.get_system([0,1,2,3,4,5,6,7,8]) # TODO: This is kinda stupid for now.
+SYSTEM_PROMPT = pb.build_system_prompt()
 
 def context_creator(**contexts):
     context = ""
