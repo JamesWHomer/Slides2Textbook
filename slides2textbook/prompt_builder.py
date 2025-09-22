@@ -1,7 +1,10 @@
-def bullet_prompt_builder(**prompts: str) -> str:
+def get_system(idx: list[int]):
+    return bullet_prompt_builder([get_promp_string(id) for id in idx])
+
+def bullet_prompt_builder(prompts: list[str]) -> str:
     prompt = ""
-    for key, value in prompts.items():
-        prompt += f" - {value}\n"
+    for s in prompts:
+        prompt += f" - {s}\n"
     return prompt
 
 def get_promp_string(idx: int) -> str:
