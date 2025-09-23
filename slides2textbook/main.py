@@ -51,10 +51,10 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
     
     if save_md:
         md_saver.save_md(chapter, str(out_dir), name)
-        print("Saved markdown to %s/%s", out_dir, name)
+        print(f"Saved markdown to %s/%s", out_dir, name)
     if (make_pdf):
         md_to_pdf.mdToPdf(chapter, str(out_dir), name)
-        print("Saved PDF to %s/%s", out_dir, name)
+        print(f"Saved PDF to %s/%s", out_dir, name)
     if not save_md and not make_pdf:
         print("Nothing saved as both --no-md and --no-pdf flags were set. ")
 
