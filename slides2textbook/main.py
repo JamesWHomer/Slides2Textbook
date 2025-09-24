@@ -5,6 +5,7 @@ from slides2textbook import llm_tools
 from slides2textbook import md_saver
 from slides2textbook import md_to_pdf
 from slides2textbook import text_loader
+from slides2textbook import prompt_builder as pb
 import argparse
 from pathlib import Path
 
@@ -45,8 +46,10 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
     trans = text_loader.load_txt(txt) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
+    SYSTEM_PROMPT = pb.build_system_prompt()
+
     print("Loaded context, beginning to generate chapter.")
-    chapter = llm_tools.to_chapter(context)
+    chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
     print("Converted slides to longform textbook")
     
     if save_md:

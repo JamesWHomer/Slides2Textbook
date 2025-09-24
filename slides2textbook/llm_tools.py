@@ -2,7 +2,6 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
-from slides2textbook import prompt_builder as pb
 
 load_dotenv()
 
@@ -11,24 +10,22 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-SYSTEM_PROMPT = pb.build_system_prompt()
-
 def context_creator(**contexts):
     context = ""
     for key, value in contexts.items():
         context += f"{key}:\n{value}\n\n"
     return context
 
-def to_chapter(context):
+def generate(system, prompt, model="gpt-5"):
     response = client.responses.create(
-    model="gpt-5",
+    model=model,
     input=[
         {
         "role": "developer",
         "content": [
             {
             "type": "input_text",
-            "text": SYSTEM_PROMPT
+            "text": system
             }
         ]
         },
@@ -37,7 +34,7 @@ def to_chapter(context):
         "content": [
             {
             "type": "input_text",
-            "text": context
+            "text": prompt
             }
         ]
         }
