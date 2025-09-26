@@ -19,7 +19,7 @@ def context_creator(**contexts):
         context += f"{key}:\n{value}\n\n"
     return context
 
-def generate(system: str, prompt: str, model="gpt-5", structured_output: Optional[Type[BaseModel]] = None):
+def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_output: Optional[Type[BaseModel]] = None):
     messages = [
         {
             "role": "developer",
@@ -45,7 +45,7 @@ def generate(system: str, prompt: str, model="gpt-5", structured_output: Optiona
         "model": model,
         "input": messages,
         "reasoning": {
-            "effort": "high",
+            "effort": effort,
             "summary": "auto"
         },
         "tools": [],
