@@ -27,7 +27,10 @@ PLANNER = ( # TODO: Figure out how to integrate prompt_builder into this.
     "Remember that your goal is to produce a high quality plan of the chapter, where a LLM powered writer agent will turn that "
     "into longform text to be read, with the goal to educate. "
     "Attempt to stick as closely as possible to the provided context at all times. "
+    "Provide the format as short bulletpoints, however due not actually output - or newlines or unecessary whitespace as it will be added automatically. "
+    "Assume that any bulletpoint not included will be left out of the textbook. "
 )
 
-def generate_chapterplan(context: str, model="gpt-5"):
-    return llm_tools.generate(PLANNER, context, model=model, structured_output=ChapterPlan)
+def generate_chapterplan(context: str, model="gpt-5", effort="high"):
+    generation = llm_tools.generate(PLANNER, context, model=model, effort=effort, structured_output=ChapterPlan)
+    return generation
