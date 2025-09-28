@@ -29,6 +29,7 @@ PLANNER = ( # TODO: Figure out how to integrate prompt_builder into this.
     "Attempt to stick as closely as possible to the provided context at all times. "
     "Provide the format as short bulletpoints, however due not actually output - or newlines or unecessary whitespace as it will be added automatically. "
     "Assume that any bulletpoint not included will be left out of the textbook. "
+    "Take a very minimal approach to the number of sections in the plan with as few as needed."
 )
 
 def generate_chapterplan(context: str, model="gpt-5", effort="high"):
