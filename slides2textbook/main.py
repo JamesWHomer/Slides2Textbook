@@ -46,10 +46,18 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
     trans = text_loader.load_txt(txt) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
-    SYSTEM_PROMPT = pb.build_system_prompt()
+    # SYSTEM_PROMPT = pb.build_system_prompt()
 
     print("Loaded context, beginning to generate chapter.")
-    chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
+    # chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
+
+    plan = planner.generate_chapterplan(context, model="gpt-5", effort="high")
+    print("Finished plan: \n" + str(plan))
+
+    chapter = ""
+    for section_plan in plan.sections:
+        chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model="gpt-5", effort="high"))
+
     print("Converted slides to longform textbook")
     
     if save_md:
