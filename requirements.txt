@@ -2,3 +2,4 @@ openai
 python-dotenv
 markdown-pdf
 pymupdf4llm
+pydantic

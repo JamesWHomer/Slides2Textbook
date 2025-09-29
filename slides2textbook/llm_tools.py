@@ -1,8 +1,10 @@
 # Handles OpenAI api calls.
 import os
+from typing import Optional, Type
+
 from dotenv import load_dotenv
 from openai import OpenAI
-from slides2textbook import prompt_builder as pb
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -11,52 +13,65 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-SYSTEM_PROMPT = pb.build_system_prompt()
-
 def context_creator(**contexts):
     context = ""
     for key, value in contexts.items():
         context += f"{key}:\n{value}\n\n"
     return context
 
-def to_chapter(context):
-    response = client.responses.create(
-    model="gpt-5",
-    input=[
+def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_output: Optional[Type[BaseModel]] = None):
+    messages = [
         {
-        "role": "developer",
-        "content": [
-            {
-            "type": "input_text",
-            "text": SYSTEM_PROMPT
-            }
-        ]
+            "role": "developer",
+            "content": [
+                {
+                    "type": "input_text",
+                    "text": system
+                }
+            ]
         },
         {
-        "role": "user",
-        "content": [
-            {
-            "type": "input_text",
-            "text": context
-            }
-        ]
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_text",
+                    "text": prompt
+                }
+            ]
         }
-    ],
-    text={
-        "format": {
-        "type": "text"
-        },
-        "verbosity": "high"
-    },
-    reasoning={
-        "effort": "high",
-        "summary": "auto"
-    },
-    tools=[],
-    store=True,
-    include=[
-        "reasoning.encrypted_content",
-        "web_search_call.action.sources"
     ]
+
+    base_args = {
+        "model": model,
+        "input": messages,
+        "reasoning": {
+            "effort": effort,
+            "summary": "auto"
+        },
+        "tools": [],
+        "store": True,
+        "include": [
+            "reasoning.encrypted_content",
+            "web_search_call.action.sources"
+        ]
+    }
+
+    if structured_output is not None:
+        if not issubclass(structured_output, BaseModel):
+            raise TypeError("structured_output must be a Pydantic BaseModel subclass.")
+        response = client.responses.parse(
+            text_format=structured_output,
+            **base_args
+        )
+        return response.output_parsed
+
+    response = client.responses.create(
+        text={
+            "format": {
+                "type": "text"
+            },
+            "verbosity": "high"
+        },
+        **base_args
     )
     return response.output_text
