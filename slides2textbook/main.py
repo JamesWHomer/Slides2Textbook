@@ -86,7 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
     parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
     parser.add_argument("-v", "--verbose", action="count", default=1, help="Increase verbosity (-v, -vv)")
-    parser.add_argument("-a" "--agents", dest="agents", help="Enable agent mode with a planner and writer, much more expensive.")
+    parser.add_argument("-a", "--agents", dest="agents", action="store_false", help="Enable agent mode with a planner and writer, much more expensive.")
     return parser
 
 def existing_file(path_str: str) -> Path:
