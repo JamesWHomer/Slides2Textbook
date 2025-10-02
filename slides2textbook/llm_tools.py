@@ -46,7 +46,7 @@ def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_
         "input": messages,
         "reasoning": {
             "effort": effort,
-            "summary": "auto"
+            # "summary": "auto"
         },
         "tools": [],
         "store": True,
