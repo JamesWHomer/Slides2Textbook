@@ -58,7 +58,7 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
         logger.info("Finished plan: \n" + str(plan))
         chapter = ""
         for section_plan in plan.sections:
-            print("Generating section plan: " + section_plan.name)
+            logger.info("Generating section plan: " + section_plan.name)
             chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model="gpt-5", effort="high"))
     else:
         SYSTEM_PROMPT = pb.build_system_prompt()
