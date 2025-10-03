@@ -1,5 +1,4 @@
 # The main orchestrator.
-from dataclasses import make_dataclass
 from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
 from slides2textbook import md_saver
@@ -47,16 +46,16 @@ def main(argv: list[str] | None = None) -> None:
 def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Starting SlidesToTextbook, now loading context.")
+    logger.info("Starting SlidesToTextbook, now loading context.")
     md = pdf_decoder.to_md(pdf) if pdf else ""
     trans = text_loader.load_txt(txt) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
-    print("Loaded context, beginning to generate chapter.")
+    logger.info("Loaded context, beginning to generate chapter.")
 
     if agents:
         plan = planner.generate_chapterplan(context, model="gpt-5", effort="high")
-        print("Finished plan: \n" + str(plan))
+        logger.info("Finished plan: \n" + str(plan))
         chapter = ""
         for section_plan in plan.sections:
             print("Generating section plan: " + section_plan.name)
@@ -65,16 +64,16 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
         SYSTEM_PROMPT = pb.build_system_prompt()
         chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
 
-    print("Converted slides to longform textbook")
+    logger.info("Converted slides to longform textbook")
     
     if save_md:
         md_saver.save_md(chapter, str(out_dir), name)
-        print(f"Saved markdown to {out_dir}/{name}")
+        logger.info(f"Saved markdown to {out_dir}/{name}")
     if (make_pdf):
         md_to_pdf.mdToPdf(chapter, str(out_dir), name)
-        print(f"Saved PDF to {out_dir}/{name}")
+        logger.info(f"Saved PDF to {out_dir}/{name}")
     if not save_md and not make_pdf:
-        print("Nothing saved as both --no-md and --no-pdf flags were set. ")
+        logger.warning("Nothing saved as both --no-md and --no-pdf flags were set. ")
 
 def configure_logging(verbosity: int, quietness: int, log_file: Path | None) -> None:
     base_level = logging.INFO
