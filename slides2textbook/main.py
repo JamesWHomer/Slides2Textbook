@@ -37,8 +37,8 @@ def main(argv: list[str] | None = None) -> None:
             make_pdf=args.make_pdf,
             agents=args.agents
         )
-    except Exception as e:
-        print("Error:", e)
+    except Exception:
+        logger.exception("Unhandled error while running Slides2Textbook pipeline")
         raise SystemExit(1)
     
 
