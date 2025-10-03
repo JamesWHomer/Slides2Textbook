@@ -1,5 +1,4 @@
 # The main orchestrator.
-from dataclasses import make_dataclass
 from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
 from slides2textbook import md_saver
@@ -8,13 +7,16 @@ from slides2textbook import text_loader
 from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
+import logging
 import argparse
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
     args = parser.parse_args()
-    # TODO: configure logging
+    configure_logging(args.verbose, args.quiet, args.log_file)
 
     if args.name:
         name = args.name
@@ -35,8 +37,8 @@ def main(argv: list[str] | None = None) -> None:
             make_pdf=args.make_pdf,
             agents=args.agents
         )
-    except Exception as e:
-        print("Error:", e)
+    except Exception:
+        logger.exception("Unhandled error while running Slides2Textbook pipeline")
         raise SystemExit(1)
     
 
@@ -44,34 +46,49 @@ def main(argv: list[str] | None = None) -> None:
 def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Starting SlidesToTextbook, now loading context.")
+    logger.info("Starting SlidesToTextbook, now loading context.")
     md = pdf_decoder.to_md(pdf) if pdf else ""
     trans = text_loader.load_txt(txt) if txt else ""
     context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
-    print("Loaded context, beginning to generate chapter.")
+    logger.info("Loaded context, beginning to generate chapter.")
 
     if agents:
         plan = planner.generate_chapterplan(context, model="gpt-5", effort="high")
-        print("Finished plan: \n" + str(plan))
+        logger.info("Finished plan: \n" + str(plan))
         chapter = ""
         for section_plan in plan.sections:
-            print("Generating section plan: " + section_plan.name)
+            logger.info("Generating section plan: " + section_plan.name)
             chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model="gpt-5", effort="high"))
     else:
         SYSTEM_PROMPT = pb.build_system_prompt()
         chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
 
-    print("Converted slides to longform textbook")
+    logger.info("Converted slides to longform textbook")
     
     if save_md:
         md_saver.save_md(chapter, str(out_dir), name)
-        print(f"Saved markdown to {out_dir}/{name}")
+        logger.info(f"Saved markdown to {out_dir}/{name}")
     if (make_pdf):
         md_to_pdf.mdToPdf(chapter, str(out_dir), name)
-        print(f"Saved PDF to {out_dir}/{name}")
+        logger.info(f"Saved PDF to {out_dir}/{name}")
     if not save_md and not make_pdf:
-        print("Nothing saved as both --no-md and --no-pdf flags were set. ")
+        logger.warning("Nothing saved as both --no-md and --no-pdf flags were set. ")
+
+def configure_logging(verbosity: int, quietness: int, log_file: Path | None) -> None:
+    base_level = logging.INFO
+    level = base_level - (verbosity * 10) + (quietness * 10)
+    level = min(max(level, logging.DEBUG), logging.CRITICAL)
+    handlers: list[logging.Handler] = [logging.StreamHandler()]
+    if log_file:
+        handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
+
+    logging.basicConfig(
+        level=level,
+        handlers=handlers,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -85,8 +102,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
     parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
-    parser.add_argument("-v", "--verbose", action="count", default=1, help="Increase verbosity (-v, -vv)")
+    parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
+    parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
     parser.add_argument("-a", "--agents", dest="agents", action="store_true", help="Enable agent mode with a planner and writer, much more expensive.")
+    parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
     return parser
 
 def existing_file(path_str: str) -> Path:
