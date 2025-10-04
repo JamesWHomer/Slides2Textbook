@@ -35,7 +35,8 @@ def main(argv: list[str] | None = None) -> None:
             name=name,
             save_md = args.save_md,
             make_pdf=args.make_pdf,
-            agents=args.agents
+            agents=args.agents,
+            model=args.model,
         )
     except Exception:
         logger.exception("Unhandled error while running Slides2Textbook pipeline")
@@ -43,7 +44,7 @@ def main(argv: list[str] | None = None) -> None:
     
 
 
-def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool) -> None:
+def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool, model: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
@@ -54,15 +55,15 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
     logger.info("Loaded context, beginning to generate chapter.")
 
     if agents:
-        plan = planner.generate_chapterplan(context, model="gpt-5", effort="high")
+        plan = planner.generate_chapterplan(context, model=model, effort="high")
         logger.info("Finished plan: \n" + str(plan))
         chapter = ""
         for section_plan in plan.sections:
             logger.info("Generating section plan: " + section_plan.name)
-            chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model="gpt-5", effort="high"))
+            chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model=model, effort="high"))
     else:
         SYSTEM_PROMPT = pb.build_system_prompt()
-        chapter = llm_tools.generate(SYSTEM_PROMPT, context, model="gpt-5")
+        chapter = llm_tools.generate(SYSTEM_PROMPT, context, model=model)
 
     logger.info("Converted slides to longform textbook")
     
@@ -105,6 +106,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
     parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
     parser.add_argument("-a", "--agents", dest="agents", action="store_true", help="Enable agent mode with a planner and writer, much more expensive.")
+    parser.add_argument("-m", "--model", type=str, default="gpt-5", help="Specify which model will be used to generate the textbook.")
     parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
     return parser
 
