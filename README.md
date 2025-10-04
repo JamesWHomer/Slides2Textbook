@@ -27,7 +27,7 @@ At the current stage in this project there is little that has been completed in 
    - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary)
    - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary)
    - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary)
-   - Optional permanent .env file: Create a file named `env` containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
+   - Optional permanent .env file: Create a file named `.env` containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
 
 ### Usage
 
