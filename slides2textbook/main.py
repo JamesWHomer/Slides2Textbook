@@ -8,8 +8,8 @@ from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
 from slides2textbook import cli
+from slides2textbook import logconfig
 import logging
-import argparse
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def main(argv: list[str] | None = None) -> None:
     parser = cli.build_parser()
     args = parser.parse_args()
-    configure_logging(args.verbose, args.quiet, args.log_file)
+    logconfig.configure_logging(args.verbose, args.quiet, args.log_file)
     name = cli.resolve_output_name(args)
 
     try:
@@ -68,21 +68,6 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
         logger.info(f"Saved PDF to {out_dir}/{name}")
     if not save_md and not make_pdf:
         logger.warning("Nothing saved as both --no-md and --no-pdf flags were set. ")
-
-def configure_logging(verbosity: int, quietness: int, log_file: Path | None) -> None:
-    base_level = logging.INFO
-    level = base_level - (verbosity * 10) + (quietness * 10)
-    level = min(max(level, logging.DEBUG), logging.CRITICAL)
-    handlers: list[logging.Handler] = [logging.StreamHandler()]
-    if log_file:
-        handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
-
-    logging.basicConfig(
-        level=level,
-        handlers=handlers,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
 
 if __name__ == "__main__":
     main()
