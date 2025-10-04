@@ -7,6 +7,7 @@ from slides2textbook import text_loader
 from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
+from slides2textbook import cli
 import logging
 import argparse
 from pathlib import Path
@@ -17,16 +18,8 @@ def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
     args = parser.parse_args()
     configure_logging(args.verbose, args.quiet, args.log_file)
+    name = cli.resolve_output_name(args)
 
-    if args.name:
-        name = args.name
-    elif args.pdf:
-        name = args.pdf.stem
-    elif args.txt:
-        name = args.txt.stem
-    else:
-        name = "textbook"
-        
     try:
         run_pipeline(
             pdf=args.pdf,
