@@ -16,9 +16,18 @@ Ensure that python (3.10+ recommended) and git are installed on your PATH.
 ### Installation
 At the current stage in this project there is little that has been completed in the way of deployment so it should be run through commandline like a standard python package.
 1. **Clone to local**: navigate to your chosen directory, open a terminal and run `git clone https://github.com/JamesWHomer/Slides2Textbook.git`, then navigate (`cd Slides2Textbook`) into that directory.
-2. **Create venv**: Not specifically required but is best practice, create a python venv (Virtual Environment) with (macOS/Linux: `python3 -m venv .venv`) (windows: `python3 -m venv .venv`)
-3. **Activate venv**: (macOS/Linux: `source .venv/bin/activate`) (windows (powershell): `.\.venv\Scripts\Activate.ps1`) (windows (cmd) `.venv\Scripts\activate.bat`)
+2. **Create venv**: Not specifically required but is best practice, create a python venv (Virtual Environment) with (macOS/Linux: `python3 -m venv .venv`) (Windows: `python3 -m venv .venv`)
+3. **Activate venv**: (macOS/Linux: `source .venv/bin/activate`) (windows (powershell): `.\.venv\Scripts\Activate.ps1`) (Windows (cmd) `.venv\Scripts\activate.bat`)
 4. **Install packages**: `pip install -r requirements.txt`
+
+### Configure OpenAI credentials
+1. Obtain and copy a valid [OpenAI key](https://platform.openai.com/)
+2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
+3. Store to local env:
+   - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary)
+   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary)
+   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary)
+   - Optional permanent .env file: Create a file named `env` containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
 
 ### Usage
 
