@@ -46,6 +46,7 @@ Command synopsis (common options):
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
 - `-a, --agents`: Enable planner/writer agent mode for higher-quality structured output (slower and more expensive).
+- `-m, --model`: Specify the model API name used (e.g., "gpt-5", "gpt-4o").
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:
