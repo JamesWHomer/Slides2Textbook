@@ -7,26 +7,19 @@ from slides2textbook import text_loader
 from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
+from slides2textbook import cli
+from slides2textbook import logconfig
 import logging
-import argparse
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 def main(argv: list[str] | None = None) -> None:
-    parser = build_parser()
+    parser = cli.build_parser()
     args = parser.parse_args()
-    configure_logging(args.verbose, args.quiet, args.log_file)
+    logconfig.configure_logging(args.verbose, args.quiet, args.log_file)
+    name = cli.resolve_output_name(args)
 
-    if args.name:
-        name = args.name
-    elif args.pdf:
-        name = args.pdf.stem
-    elif args.txt:
-        name = args.txt.stem
-    else:
-        name = "textbook"
-        
     try:
         run_pipeline(
             pdf=args.pdf,
@@ -75,46 +68,6 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
         logger.info(f"Saved PDF to {out_dir}/{name}")
     if not save_md and not make_pdf:
         logger.warning("Nothing saved as both --no-md and --no-pdf flags were set. ")
-
-def configure_logging(verbosity: int, quietness: int, log_file: Path | None) -> None:
-    base_level = logging.INFO
-    level = base_level - (verbosity * 10) + (quietness * 10)
-    level = min(max(level, logging.DEBUG), logging.CRITICAL)
-    handlers: list[logging.Handler] = [logging.StreamHandler()]
-    if log_file:
-        handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
-
-    logging.basicConfig(
-        level=level,
-        handlers=handlers,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog='Slide2Textbook',
-        description="Slide2Textbook allows you to convert pdf's and other context into high quality textbooks.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument("--pdf", type=existing_file, help="Path to input slides PDF")
-    parser.add_argument("--txt", type=existing_file, help="Path to input txt context")
-    parser.add_argument("-o", "--out-dir", type=Path, default=Path("output"), help="Directory to place outputs")
-    parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
-    parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
-    parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
-    parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
-    parser.add_argument("-a", "--agents", dest="agents", action="store_true", help="Enable agent mode with a planner and writer, much more expensive.")
-    parser.add_argument("-m", "--model", type=str, default="gpt-5", help="Specify which model will be used to generate the textbook.")
-    parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
-    return parser
-
-def existing_file(path_str: str) -> Path:
-    p = Path(path_str)
-    if not p.is_file():
-        raise argparse.ArgumentTypeError(f"{p} does not exist or is not a file")
-    return p
 
 if __name__ == "__main__":
     main()
