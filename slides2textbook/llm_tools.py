@@ -74,4 +74,4 @@ def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_
         },
         **base_args
     )
-    return response.output_text
+    return response.usage.input_tokens, response.usage.output_tokens, response.output_text

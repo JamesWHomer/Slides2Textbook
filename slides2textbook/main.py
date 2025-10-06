@@ -47,18 +47,27 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
 
     logger.info("Loaded context, beginning to generate chapter.")
 
+    input_tokens = output_tokens = 0
+
     if agents:
-        plan = planner.generate_chapterplan(context, model=model, effort="high")
+        inp, out, plan = planner.generate_chapterplan(context, model=model, effort="high")
+        input_tokens += inp
+        output_tokens += out
         logger.info("Finished plan: \n" + str(plan))
         chapter = ""
         for section_plan in plan.sections:
             logger.info("Generating section plan: " + section_plan.name)
-            chapter += "\n" + str(writer.generate_section(context, chapter, section_plan, model=model, effort="high"))
+            inp, out, section = writer.generate_section(context, chapter, section_plan, model=model, effort="high")
+            chapter += "\n" + section
+            input_tokens += inp
+            output_tokens += out
     else:
         SYSTEM_PROMPT = pb.build_system_prompt()
-        chapter = llm_tools.generate(SYSTEM_PROMPT, context, model=model)
+        inp, out, chapter = llm_tools.generate(SYSTEM_PROMPT, context, model=model)
+        input_tokens += inp
+        output_tokens += out
 
-    logger.info("Converted slides to longform textbook")
+    logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
     
     if save_md:
         md_saver.save_md(chapter, str(out_dir), name)
