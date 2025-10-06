@@ -33,5 +33,4 @@ PLANNER = ( # TODO: Figure out how to integrate prompt_builder into this.
 )
 
 def generate_chapterplan(context: str, model="gpt-5", effort="high"):
-    generation = llm_tools.generate(PLANNER, context, model=model, effort=effort, structured_output=ChapterPlan)
-    return generation
+    return llm_tools.generate(PLANNER, context, model=model, effort=effort, structured_output=ChapterPlan)
