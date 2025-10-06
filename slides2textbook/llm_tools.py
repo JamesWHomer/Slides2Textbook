@@ -63,7 +63,7 @@ def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_
             text_format=structured_output,
             **base_args
         )
-        return response.output_parsed
+        return response.usage.input_tokens, response.usage.output_tokens, response.output_parsed
 
     response = client.responses.create(
         text={

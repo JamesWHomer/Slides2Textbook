@@ -58,7 +58,7 @@ def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, s
         for section_plan in plan.sections:
             logger.info("Generating section plan: " + section_plan.name)
             inp, out, section = writer.generate_section(context, chapter, section_plan, model=model, effort="high")
-            chapter += "\n" + section
+            chapter += "\n" + str(section)
             input_tokens += inp
             output_tokens += out
     else:

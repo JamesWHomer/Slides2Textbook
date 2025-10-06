@@ -22,7 +22,4 @@ WRITER = (
 def generate_section(context: str, so_far_generated: str, section_plan, model="gpt-5", effort="high"):
     system = WRITER + "\n\n" + context + "\n\n" + so_far_generated
     prompt = str(section_plan)
-    generation = llm_tools.generate(system, prompt, model=model, effort=effort, structured_output=Section)
-    if isinstance(generation, Section):
-        return generation.markdown_text
-    return str(generation)
+    return llm_tools.generate(system, prompt, model=model, effort=effort, structured_output=Section)
