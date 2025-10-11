@@ -22,8 +22,7 @@ def main(argv: list[str] | None = None) -> None:
 
     try:
         run_pipeline(
-            pdf=args.pdf,
-            txt=args.txt,
+            context=args.load_context,
             out_dir=args.out_dir,
             name=name,
             save_md = args.save_md,
@@ -37,14 +36,23 @@ def main(argv: list[str] | None = None) -> None:
     
 
 
-def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool, model: str) -> None:
+def run_pipeline(context: list[Path], out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool, model: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
-    md = pdf_decoder.to_md(pdf) if pdf else ""
-    trans = text_loader.load_txt(txt) if txt else ""
-    context = llm_tools.context_creator(markdown_file=md, transcript=trans)
-
+    context_dict = {}
+    for file in context:
+        file.suffix
+        match file.suffix:
+            case ".pdf":
+                context_dict[file.stem] = pdf_decoder.to_md(file)
+            case ".txt":
+                context_dict[file.stem] = text_loader.load_txt(file)
+            case _: # TODO: There has **got** to be a better way to do this... Shit code, redo.
+                logger.exception("Unsupported filetype included in context")
+                raise SystemExit(1)
+    context = llm_tools.context_creator(context_dict)
+    
     logger.info("Loaded context, beginning to generate chapter.")
 
     input_tokens = output_tokens = 0
