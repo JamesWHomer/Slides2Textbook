@@ -22,7 +22,7 @@ def main(argv: list[str] | None = None) -> None:
 
     try:
         run_pipeline(
-            context=args.load_context,
+            paths=args.context_paths,
             out_dir=args.out_dir,
             name=name,
             save_md = args.save_md,
@@ -41,7 +41,7 @@ def run_pipeline(paths: list[Path], out_dir: Path, name: str, save_md: bool, mak
 
     logger.info("Starting SlidesToTextbook, now loading context.")
 
-    context = context_loader(paths)
+    context = context_loader.load_context(paths)
     
     logger.info("Loaded context, beginning to generate chapter.")
 
