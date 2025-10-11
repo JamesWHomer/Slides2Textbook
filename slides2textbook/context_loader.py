@@ -18,12 +18,12 @@ def load_context(paths: list[Path]) -> str:
                 raise SystemExit(1)
     return context_formatter(context_dict)
 
-def context_formatter(**contexts):
+def context_formatter(context_dict):
     """
     Converts a dictionary of key and file text pairs into a LLM readable format.
     """
     context = ""
-    for key, value in contexts.items():
+    for key, value in context_dict.items():
         context += f"{key}:\n{value}\n\n"
     return context
 
