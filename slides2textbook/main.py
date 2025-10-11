@@ -3,7 +3,6 @@ from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
 from slides2textbook import md_saver
 from slides2textbook import md_to_pdf
-from slides2textbook import text_loader
 from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
