@@ -13,12 +13,6 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def context_creator(**contexts):
-    context = ""
-    for key, value in contexts.items():
-        context += f"{key}:\n{value}\n\n"
-    return context
-
 def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_output: Optional[Type[BaseModel]] = None):
     messages = [
         {
