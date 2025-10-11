@@ -28,9 +28,12 @@ def existing_file(path_str: str) -> Path:
 def resolve_output_name(args: argparse.Namespace) -> str:
     if args.name:
         return args.name
-    elif args.pdf:
-        return args.pdf.stem
-    elif args.txt:
-        return args.txt.stem
+    context_paths = getattr(args, "context_paths", None) or []
+    for path in context_paths:
+        if not path:
+            continue
+        if isinstance(path, Path):
+            return path.stem
+        return Path(path).stem
     else:
         return "textbook"
