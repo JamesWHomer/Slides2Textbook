@@ -3,12 +3,12 @@ from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
 from slides2textbook import md_saver
 from slides2textbook import md_to_pdf
-from slides2textbook import text_loader
 from slides2textbook import prompt_builder as pb
 from slides2textbook.agents import planner
 from slides2textbook.agents import writer
 from slides2textbook import cli
 from slides2textbook import logconfig
+from slides2textbook import context_loader
 import logging
 from pathlib import Path
 
@@ -22,8 +22,7 @@ def main(argv: list[str] | None = None) -> None:
 
     try:
         run_pipeline(
-            pdf=args.pdf,
-            txt=args.txt,
+            paths=args.context_paths,
             out_dir=args.out_dir,
             name=name,
             save_md = args.save_md,
@@ -37,14 +36,13 @@ def main(argv: list[str] | None = None) -> None:
     
 
 
-def run_pipeline(pdf: Path | None, txt: Path | None, out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool, model: str) -> None:
+def run_pipeline(paths: list[Path], out_dir: Path, name: str, save_md: bool, make_pdf: bool, agents: bool, model: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
-    md = pdf_decoder.to_md(pdf) if pdf else ""
-    trans = text_loader.load_txt(txt) if txt else ""
-    context = llm_tools.context_creator(markdown_file=md, transcript=trans)
 
+    context = context_loader.load_context(paths)
+    
     logger.info("Loaded context, beginning to generate chapter.")
 
     input_tokens = output_tokens = 0

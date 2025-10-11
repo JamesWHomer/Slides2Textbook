@@ -7,8 +7,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Slide2Textbook allows you to convert pdf's and other context into high quality textbooks.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--pdf", type=existing_file, help="Path to input slides PDF")
-    parser.add_argument("--txt", type=existing_file, help="Path to input txt context")
+    parser.add_argument("-l", "--load-context", dest="context_paths", nargs='+', type=existing_file, default=[], help="One or more files to preload into the context (e.g. -l notes/outline.txt slides/deck.pdf)")
     parser.add_argument("-o", "--out-dir", type=Path, default=Path("output"), help="Directory to place outputs")
     parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
@@ -29,9 +28,12 @@ def existing_file(path_str: str) -> Path:
 def resolve_output_name(args: argparse.Namespace) -> str:
     if args.name:
         return args.name
-    elif args.pdf:
-        return args.pdf.stem
-    elif args.txt:
-        return args.txt.stem
+    context_paths = getattr(args, "context_paths", None) or []
+    for path in context_paths:
+        if not path:
+            continue
+        if isinstance(path, Path):
+            return path.stem
+        return Path(path).stem
     else:
         return "textbook"
