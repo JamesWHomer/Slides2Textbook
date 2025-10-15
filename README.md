@@ -37,8 +37,7 @@ Slides2Textbook converts a slides PDF and/or a plain-text transcript into a long
 - Typical run (PDF to Markdown + PDF): `python -m slides2textbook --pdf path/to/slides.pdf`
 
 Command synopsis (common options):
-- `--pdf PATH`: Path to the input slides PDF (optional).
-- `--txt PATH`: Path to a plain-text transcript or supplemental context (optional).
+- `-l, --load PATH`: Paths to the input PDF's and/or text files.
 - `-o, --out-dir PATH`: Output directory. Default: `output`.
 - `-n, --name NAME`: Basename for outputs. Defaults to the PDF filename (without extension); if no PDF, falls back to TXT filename; otherwise `textbook`.
 - `--no-md`: Do not save the Markdown file.
@@ -51,18 +50,18 @@ Command synopsis (common options):
 
 Examples:
 - Convert a PDF to both Markdown and PDF:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf`
+  `python -m slides2textbook -l slides/lecture1.pdf`
 - Combine slides and transcript as context:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf --txt transcripts/lecture1.txt`
+  `python -m slides2textbook -l slides/lecture1.pdf --txt transcripts/lecture1.txt`
 - Transcript-only to textbook:  
-  `python -m slides2textbook --txt transcripts/lecture1.txt`
+  `python -m slides2textbook -l transcripts/lecture1.txt`
 - Custom output directory and name:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf -o out/chapters -n intro-to-ml`
+  `python -m slides2textbook -l slides/lecture1.pdf -o out/chapters -n intro-to-ml`
 - Save only Markdown:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf --no-pdf`
+  `python -m slides2textbook -l slides/lecture1.pdf --no-pdf`
 - Save only PDF:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf --no-md`
+  `python -m slides2textbook -l slides/lecture1.pdf --no-md`
 - Agent mode (planner + writer):  
-  `python -m slides2textbook --pdf slides/lecture1.pdf -a`
+  `python -m slides2textbook -l slides/lecture1.pdf -a`
 - More logs and write to file:  
-  `python -m slides2textbook --pdf slides/lecture1.pdf -vv --log-file logs/run.log`
+  `python -m slides2textbook -l slides/lecture1.pdf -vv --log-file logs/run.log`
