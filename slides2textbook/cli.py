@@ -14,7 +14,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
     parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
-    parser.add_argument("-a", "--agents", dest="agents", action="store_true", help="Enable agent mode with a planner and writer, much more expensive.")
     parser.add_argument("-m", "--model", type=str, default="gpt-5", help="Specify which model will be used to generate the textbook.")
     parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
     return parser
