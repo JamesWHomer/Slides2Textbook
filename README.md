@@ -37,7 +37,7 @@ Slides2Textbook converts a slides PDF and/or a plain-text transcript into a long
 - Typical run (PDF to Markdown + PDF): `python -m slides2textbook --pdf path/to/slides.pdf`
 
 Command synopsis (common options):
-- `-l, --load PATH`: Paths to the input directory that contains the files to be loaded.
+- `-l, --load PATH`: Path to the input directory that contains the files to be loaded.
 - `-o, --out-dir PATH`: Output directory. Default: `output`.
 - `-n, --name NAME`: Basename for outputs. Defaults to the PDF filename (without extension); if no PDF, falls back to TXT filename; otherwise `textbook`.
 - `--no-md`: Do not save the Markdown file.
@@ -50,5 +50,9 @@ Command synopsis (common options):
 Examples:
 - Convert a PDF to both Markdown and PDF:  
   `python -m slides2textbook -l maths_textbook/input -o maths_textbook/output`
+
+Note that context is loaded from the specified main directory. There are two ways of loading context:
+1. **Folder Based**: Each folder (in alphabetic order) is considered it's own chapter. All files/context within the subchapters are loaded individually. This is the recommended method.
+2. **Name Based**: Files in the folder are loaded in alphabetic order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
 
 TODO: More examples
