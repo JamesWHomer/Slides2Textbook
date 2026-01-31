@@ -1,20 +1,83 @@
+import logging
 from pathlib import Path
+
+from openai.types import file_chunking_strategy
 from slides2textbook import pdf_decoder
 
-def load_context(paths: list[Path]) -> str:
-    """ 
-    Loads files directd by a list of paths and returns a combined LLM readable str.
+logger = logging.getLogger(__name__)
+
+def load_main_directory(path: Path) -> list[str]:
     """
+    Load all the subdirectories and their files as their respective chapter context. 
+    Each chapter context is created based on the context held within each chapter directory in alphabetic order.
+    """
+    logger.info(f"Loading main directory at Path: {str(path)}")
+    dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: p.name)
+
+    if dirs:
+        return [load_directory(chapter_context) for chapter_context in dirs]
+        
+    chapters = load_directory_chapters(path)
+    if len(chapters) < 1:
+        logger.error("No context loaded. Aborting program.")
+    return chapters
+
+
+def load_directory_chapters(path: Path) -> list[str]:
+    """
+    Load directory as textbook context where each set of files that share the same basename is considered a seperate chapter context.
+    """
+    files = sorted(
+        (p for p in path.rglob("*") if p.is_file()), 
+        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+    )
+
+    if not files:
+        return []
+
+    chapters: list[list[Path]] = []
+    current: list[Path] = []
+
+    for file in files:
+        if current and file.stem != current[-1].stem:
+            chapters.append(current)
+            current = []
+        current.append(file)
+    
+    if current:
+        chapters.append(current)
+
+    return [load_context(chapter) for chapter in chapters]
+
+def load_directory(path: Path) -> str:
+    """
+    Load directory as chapter context, recursive inclusion of subdirectories, sorted by relative folder, then filename.
+    """
+    files = sorted(
+        (p for p in path.rglob("*") if p.is_file()), 
+        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+    )
+
+    return load_context(files)
+
+def load_context(paths: list[Path] | Path) -> str:
+    """ 
+    Loads the list of paths and returns a combined LLM readable str.
+    """
+
+    if isinstance(paths, Path):
+        paths = [paths]
+
     context_dict = {}
     for file in paths:
         file.suffix
         match file.suffix:
             case ".pdf":
-                context_dict[file.stem] = pdf_decoder.to_md(file)
+                context_dict[file.name] = pdf_decoder.to_md(file)
             case ".txt" | ".md" | ".json" | ".html": # TODO: A lot more, if this is the approach we are taking.
-                context_dict[file.stem] = load_textfile(file)
+                context_dict[file.name] = load_textfile(file)
             case _: # TODO: There has **got** to be a better way to do this... Shit code, redo.
-                # logger.exception("Unsupported filetype included in context") # TODO: logger here
+                logger.error("Unsupported filetype included in context")
                 raise SystemExit(1)
     return context_formatter(context_dict)
 
