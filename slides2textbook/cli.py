@@ -7,7 +7,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Slide2Textbook allows you to convert pdf's and other context into high quality textbooks.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("-l", "--load-context", dest="context_paths", nargs='+', required=True, type=existing_file, default=[], help="One or more files to preload into the context (e.g. -l notes/outline.txt slides/deck.pdf)")
+    parser.add_argument("-l", "--load-context", dest="context_path", required=True, type=existing_dir, help="The path to a directory that contains the context of the textbook (e.g. -l codingtextbook)")
     parser.add_argument("-o", "--out-dir", type=Path, default=Path("output"), help="Directory to place outputs")
     parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
@@ -22,6 +22,12 @@ def existing_file(path_str: str) -> Path:
     p = Path(path_str)
     if not p.is_file():
         raise argparse.ArgumentTypeError(f"{p} does not exist or is not a file")
+    return p
+
+def existing_dir(path_str: str) -> Path:
+    p = Path(path_str)
+    if not p.is_dir():
+        raise argparse.ArgumentTypeError(f"{p} does not exist or is not a directory")
     return p
 
 def resolve_output_name(args: argparse.Namespace) -> str:
