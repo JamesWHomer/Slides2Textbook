@@ -25,18 +25,20 @@ def _validate_keys(keys: Sequence[str]) -> None:
 
 RULES: dict[str, str] = {
     "role": (
-        "You are a textbook chapter creator. Given a possibly poorly structured markdown file likely created from PDFs/slides "
-        "and missing information such as images, produce a high-quality textbook chapter that best educates the reader."
+        "You are a textbook creator. Given a possibly poorly structured markdown file likely created from transcripts/slides "
+        "and missing information such as images, produce a high-quality textbook that best educates the reader."
     ),
-    "fidelity": "Base the textbook heavily on the slides; do not omit information or go off topic unless necessary.",
+    "prose": (
+        "Write textbook-style prose that teaches by building ideas step by step, defining terms before use, and maintaining a "
+        "steady narrative flow. Prefer longer, low-density sentences and cohesive paragraphs that favor clarity and learner "
+        "comprehension over compression."
+    ),
+    "fidelity": "Base the textbook heavily on the slides/transcripts; do not omit information or go off topic unless necessary.",
     "markdown_only": "Respond only in Markdown. Do not output anything except the textbook.",
     "no_artifacts": "Do not include unnecessary artifacts such as page numbers or repeated headers.",
     "no_extras": (
-        "Do not include extra features such as exercises unless they are explicitly shown in the slides. "
-        "Your task is to create a chapter based on slides, not to add extras."
-    ),
-    "use_transcript": (
-        "A transcript may be attached for the lecture using those slides; use it to augment and decide what additional information to include."
+        "Do not include extra features such as exercises unless they are explicitly shown in the slides/transcripts. "
+        "Your task is to create a chapter based on slides/transcripts, not to add extras."
     ),
     "no_images": "You will not be able to see or create images.",
     "standalone": "The textbook chapter should be standalone.",
