@@ -40,7 +40,7 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
 
     context: list[str] = context_loader.load_main_directory(path)
 
-    logger.info(f"Loaded context of character length {len(context)}, beginning to generate textbook.")
+    logger.info(f"Loaded textbook context, beginning to generate textbook of {len(context)} chapters.")
 
     input_tokens = output_tokens = 0
     SYSTEM_PROMPT = pb.build_system_prompt()
