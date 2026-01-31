@@ -24,10 +24,10 @@ At the current stage in this project there is little that has been completed in 
 1. Obtain and copy a valid [OpenAI key](https://platform.openai.com/)
 2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
 3. Store to local env:
-   - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary)
-   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary)
-   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary)
-   - Optional permanent .env file: Create a file named `.env` containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
+   <!-- - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary)  !!! DOES NOT CURRENTLY FUNCTION !!!
+   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary) !!! DOES NOT CURRENTLY FUNCTION !!!
+   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary) !!! DOES NOT CURRENTLY FUNCTION !!! --> 
+   - Optional permanent .env file: Create a file named `.env` in the directory, containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
 
 ### Usage
 
@@ -37,30 +37,18 @@ Slides2Textbook converts a slides PDF and/or a plain-text transcript into a long
 - Typical run (PDF to Markdown + PDF): `python -m slides2textbook --pdf path/to/slides.pdf`
 
 Command synopsis (common options):
-- `-l, --load PATH`: Paths to the input PDF's and/or text files.
+- `-l, --load PATH`: Paths to the input directory that contains the files to be loaded.
 - `-o, --out-dir PATH`: Output directory. Default: `output`.
 - `-n, --name NAME`: Basename for outputs. Defaults to the PDF filename (without extension); if no PDF, falls back to TXT filename; otherwise `textbook`.
 - `--no-md`: Do not save the Markdown file.
 - `--no-pdf`: Do not save the PDF file.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
-- `-m, --model`: Specify the model API name used (e.g., "gpt-5", "gpt-4o").
+- `-m, --model`: Specify the model API name used (e.g., "gpt-5", "gpt-5-nano"). Note that it appears that currently only the gpt-5 family of models functions properly, this will be investigated later.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:
 - Convert a PDF to both Markdown and PDF:  
-  `python -m slides2textbook -l slides/lecture1.pdf`
-- Combine slides and transcript as context:  
-  `python -m slides2textbook -l slides/lecture1.pdf --txt transcripts/lecture1.txt`
-- Transcript-only to textbook:  
-  `python -m slides2textbook -l transcripts/lecture1.txt`
-- Custom output directory and name:  
-  `python -m slides2textbook -l slides/lecture1.pdf -o out/chapters -n intro-to-ml`
-- Save only Markdown:  
-  `python -m slides2textbook -l slides/lecture1.pdf --no-pdf`
-- Save only PDF:  
-  `python -m slides2textbook -l slides/lecture1.pdf --no-md`
-- Agent mode (planner + writer):  
-  `python -m slides2textbook -l slides/lecture1.pdf -a`
-- More logs and write to file:  
-  `python -m slides2textbook -l slides/lecture1.pdf -vv --log-file logs/run.log`
+  `python -m slides2textbook -l maths_textbook/input -o maths_textbook/output`
+
+TODO: More examples
