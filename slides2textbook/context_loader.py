@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from openai.types import file_chunking_strategy
@@ -69,13 +70,16 @@ def load_context(paths: list[Path] | Path) -> str:
         paths = [paths]
 
     context_dict = {}
+    common_path = Path(os.path.commonpath([str(p) for p in paths]))
+    base_path = common_path.parent if common_path.is_file() else common_path
     for file in paths:
         file.suffix
+        key = file.relative_to(base_path).as_posix()
         match file.suffix:
             case ".pdf":
-                context_dict[file.name] = pdf_decoder.to_md(file)
+                context_dict[key] = pdf_decoder.to_md(file)
             case ".txt" | ".md" | ".json" | ".html": # TODO: A lot more, if this is the approach we are taking.
-                context_dict[file.name] = load_textfile(file)
+                context_dict[key] = load_textfile(file)
             case _: # TODO: There has **got** to be a better way to do this... Shit code, redo.
                 logger.error("Unsupported filetype included in context")
                 raise SystemExit(1)
