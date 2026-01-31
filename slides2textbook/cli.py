@@ -31,14 +31,16 @@ def existing_dir(path_str: str) -> Path:
     return p
 
 def resolve_output_name(args: argparse.Namespace) -> str:
+    """Return output basename from -n or input context path name."""
     if args.name:
         return args.name
-    context_paths = getattr(args, "context_paths", None) or []
-    for path in context_paths:
-        if not path:
-            continue
-        if isinstance(path, Path):
-            return path.stem
-        return Path(path).stem
-    else:
-        return "textbook"
+    context_path = getattr(args, "context_path", None)
+    if context_path:
+        if not isinstance(context_path, Path):
+            context_path = Path(context_path)
+        if context_path.is_file():
+            return context_path.stem
+        if context_path.is_dir():
+            if context_path.name:
+                return context_path.name
+    return "textbook"
