@@ -46,14 +46,23 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
     SYSTEM_PROMPT = pb.build_system_prompt()
     textbook: list[str] = []
 
+    final_context: str = ""
+
     for idx, chapter_context in enumerate(context):
         if idx > 0:
-            chapter_context = "Previous chapter: \n" + textbook[-1] + "\n\n" + "Current chapter input context: \n\n" + chapter_context
-        inp, out, chapter = llm_tools.generate(SYSTEM_PROMPT, chapter_context, model=model)
+            final_context = "Previous chapter: \n" + textbook[-1] 
+        else:
+            final_context = "You are now generating the first chapter of the textbook. Make sure to include the title of the book. "
+            if name:
+                final_context += f"The provided name for the textbook is {name}, however you may modify or format this if you see fit. "
+
+        final_context += "\n\n" + "Current chapter input context: \n\n" + chapter_context
+            
+        inp, out, chapter = llm_tools.generate(SYSTEM_PROMPT, final_context, model=model)
         textbook.append(chapter)
         input_tokens += inp
         output_tokens += out
-        logger.info("Finished generating chapter: " + chapter[:100])
+        logger.info("Finished generating chapter: " + chapter[:100].strip('\n') + "...")
 
     logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
 

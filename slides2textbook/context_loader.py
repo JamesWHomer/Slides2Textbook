@@ -63,7 +63,7 @@ def load_directory(path: Path) -> str:
 
 def load_context(paths: list[Path] | Path) -> str:
     """ 
-    Loads the list of paths and returns a combined LLM readable str.
+    Loads the list of paths and returns a combined LLM readable string.
     """
 
     if isinstance(paths, Path):
