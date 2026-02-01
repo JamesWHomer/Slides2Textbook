@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from pathlib import Path
 
 from openai.types import file_chunking_strategy
@@ -7,13 +8,17 @@ from slides2textbook import pdf_decoder
 
 logger = logging.getLogger(__name__)
 
+def _natural_key(value: str) -> list[object]:
+    parts = re.split(r"(\d+)", value)
+    return [int(part) if part.isdigit() else part.lower() for part in parts]
+
 def load_main_directory(path: Path) -> list[str]:
     """
     Load all the subdirectories and their files as their respective chapter context. 
     Each chapter context is created based on the context held within each chapter directory in alphabetic order.
     """
     logger.info(f"Loading main directory at Path: {str(path)}")
-    dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: p.name)
+    dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: _natural_key(p.name))
 
     if dirs:
         return [load_directory(chapter_context) for chapter_context in dirs]
@@ -29,8 +34,11 @@ def load_directory_chapters(path: Path) -> list[str]:
     Load directory as textbook context where each set of files that share the same basename is considered a seperate chapter context.
     """
     files = sorted(
-        (p for p in path.rglob("*") if p.is_file()), 
-        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+        (p for p in path.rglob("*") if p.is_file()),
+        key=lambda p: (
+            _natural_key(p.relative_to(path).parent.as_posix()),
+            _natural_key(p.name),
+        ),
     )
 
     if not files:
@@ -55,13 +63,16 @@ def load_directory(path: Path) -> str:
     Load directory as chapter context, recursive inclusion of subdirectories, sorted by relative folder, then filename.
     """
     files = sorted(
-        (p for p in path.rglob("*") if p.is_file()), 
-        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+        (p for p in path.rglob("*") if p.is_file()),
+        key=lambda p: (
+            _natural_key(p.relative_to(path).parent.as_posix()),
+            _natural_key(p.name),
+        ),
     )
 
     return load_context(files)
 
-def load_context(paths: list[Path] | Path) -> str:
+def load_context(paths: list[Path] | Path, return_instructions: bool = False) -> str:
     """ 
     Loads the list of paths and returns a combined LLM readable string.
     """
