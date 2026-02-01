@@ -50,9 +50,11 @@ Command synopsis (common options):
 Examples:
 - Convert a PDF to both Markdown and PDF:  
   `python -m slides2textbook -l maths_textbook/input -o maths_textbook/output`
+  TODO: More examples
 
 Note that context is loaded from the specified main directory. There are two ways of loading context:
 1. **Folder Based**: Each folder (in alphabetic order) is considered it's own chapter. All files/context within the subchapters are loaded individually. This is the recommended method.
 2. **Name Based**: Files in the folder are loaded in alphabetic order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
 
-TODO: More examples
+## AI Policy
+AI can be used for guidance and as a stack overflow replacement, however any code written must be handwritten by a human. AI could be used easily to speed up development 100x in the short term, however risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human.
