@@ -73,7 +73,8 @@ def load_context(paths: list[Path] | Path) -> str:
     common_path = Path(os.path.commonpath([str(p) for p in paths]))
     base_path = common_path.parent if common_path.is_file() else common_path
     for file in paths:
-        file.suffix
+        if not return_instructions and file.name == "textbook_instructions.txt":
+            continue
         key = file.relative_to(base_path).as_posix()
         match file.suffix:
             case ".pdf":
@@ -84,6 +85,13 @@ def load_context(paths: list[Path] | Path) -> str:
                 logger.error("Unsupported filetype included in context")
                 raise SystemExit(1)
     return context_formatter(context_dict)
+
+def load_instructions(path: Path) -> str:
+    path = path / "textbook_instructions.txt"
+    if path.is_file():
+        return load_textfile(path)
+    else:
+        return None
 
 def context_formatter(context_dict):
     """
