@@ -85,6 +85,12 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
     for chapter in textbook:
         textbook_str += chapter
     
+    save_md(textbook_str, out_dir, name, save_md, make_pdf, make_epub)
+
+def save_md(textbook_str: str, out_dir: Path, name: str, save_md: bool = True, make_pdf: bool = True, make_epub: bool = True):
+    """
+    Function to simplify run_pipeline.
+    """
     if save_md:
         md_helper.save_md(textbook_str, out_dir, name)
         logger.info(f"Saved markdown to {out_dir}/{name}")
