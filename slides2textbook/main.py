@@ -26,6 +26,7 @@ def main(argv: list[str] | None = None) -> None:
             make_pdf=args.make_pdf,
             make_epub=args.make_epub,
             model=args.model,
+            effort = args.effort,
         )
     except Exception:
         logger.exception("Unhandled error while running Slides2Textbook pipeline")
@@ -39,6 +40,7 @@ def run_pipeline(
     make_pdf: bool,
     make_epub: bool,
     model: str,
+    effort: str,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -71,7 +73,7 @@ def run_pipeline(
             textbook,
             name,
         )
-        inp, out, chapter = llm_tools.generate(system_prompt, chapter_prompt, model=model)
+        inp, out, chapter = llm_tools.generate(system_prompt, chapter_prompt, model=model, effort=effort)
         textbook.append(chapter)
         input_tokens += inp
         output_tokens += out
