@@ -30,17 +30,23 @@ def main(argv: list[str] | None = None) -> None:
     except Exception:
         logger.exception("Unhandled error while running Slides2Textbook pipeline")
         raise SystemExit(1)
-    
 
-
-def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: bool, make_epub: bool, model: str) -> None:
+def run_pipeline(
+    path: Path,
+    out_dir: Path,
+    name: str,
+    save_md: bool,
+    make_pdf: bool,
+    make_epub: bool,
+    model: str,
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
 
-    context: list[str] = context_loader.load_main_directory(path)
+    loaded_context: list[str] = context_loader.load_main_directory(path)
 
-    if not context:
+    if not loaded_context:
         logger.error("No context loaded, aborting program.")
         return
 
@@ -49,31 +55,23 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
     if instructions:
         logger.info(f"Textbook Instructions of length {len(instructions)} loaded.")
     else:
-        logger.info(f"No textbook instructions loaded.")
+        logger.info("No textbook instructions loaded.")
 
-    logger.info(f"Loaded textbook context, beginning to generate textbook of {len(context)} chapters.")
+    logger.info(f"Loaded textbook context, beginning to generate textbook of {len(loaded_context)} chapters.")
 
     input_tokens = output_tokens = 0
-    SYSTEM_PROMPT = pb.build_system_prompt()
+    system_prompt = pb.build_system_prompt()
     textbook: list[str] = []
 
-    final_context: str = ""
-
-    for idx, chapter_context in enumerate(context):
-        if instructions:
-            final_context = "Whole Textbook Instructions: \n" + instructions + "\n\n"
-        else:
-            final_context = ""
-        if idx > 0:
-            final_context += "Previous chapter: \n" + textbook[-1] 
-        else:
-            final_context += "You are now generating the first chapter of the textbook. Make sure to include the title of the book. "
-            if name:
-                final_context += f"The provided name for the textbook is {name}, however you may modify or format this if you see fit. "
-
-        final_context += "\n\n" + "Current chapter input context: \n\n" + chapter_context
-            
-        inp, out, chapter = llm_tools.generate(SYSTEM_PROMPT, final_context, model=model)
+    for idx, chapter_context in enumerate(loaded_context):
+        chapter_prompt = get_chapter_context(
+            chapter_context,
+            instructions,
+            idx,
+            textbook,
+            name,
+        )
+        inp, out, chapter = llm_tools.generate(system_prompt, chapter_prompt, model=model)
         textbook.append(chapter)
         input_tokens += inp
         output_tokens += out
@@ -81,11 +79,43 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
 
     logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
 
-    textbook_str = ""
-    for chapter in textbook:
-        textbook_str += chapter
+    # Combine chapters into textbook string
+    textbook_str = "".join(textbook)
     
     save_md(textbook_str, out_dir, name, save_md, make_pdf, make_epub)
+
+def get_chapter_context(
+    chapter_context: str,
+    instructions: str,
+    textbook_idx: int,
+    textbook: list[str] | None,
+    textbook_name: str,
+) -> str:
+    parts: list[str] = []
+
+    if instructions:
+        parts.append("Whole Textbook Instructions:\n")
+        parts.append(instructions)
+        parts.append("\n\n")
+
+    if textbook_idx > 0 and textbook:
+        parts.append("Previous chapter:\n")
+        parts.append(textbook[textbook_idx - 1])
+    else:
+        parts.append(
+            "You are now generating the first chapter of the textbook. "
+            "Make sure to include the title of the book. "
+        )
+        if textbook_name:
+            parts.append(
+                f"The provided name for the textbook is {textbook_name}, "
+                "however you may modify or format this if you see fit. "
+            )
+
+    parts.append("\n\nCurrent chapter input context:\n\n")
+    parts.append(chapter_context)
+
+    return "".join(parts)
 
 def save_md(textbook_str: str, out_dir: Path, name: str, save_md: bool = True, make_pdf: bool = True, make_epub: bool = True):
     """
