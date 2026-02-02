@@ -34,7 +34,11 @@ def load_directory_chapters(path: Path) -> list[str]:
     Load directory as textbook context where each set of files that share the same basename is considered a seperate chapter context.
     """
     files = sorted(
-        (p for p in path.rglob("*") if p.is_file()),
+        (
+            p
+            for p in path.rglob("*")
+            if p.is_file() and p.name != "textbook_instructions.txt"
+        ),
         key=lambda p: (
             _natural_key(p.relative_to(path).parent.as_posix()),
             _natural_key(p.name),
