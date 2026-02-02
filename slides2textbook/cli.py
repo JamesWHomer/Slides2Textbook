@@ -12,6 +12,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
     parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
+    parser.add_argument("--no-epub", dest="make_epub", action="store_false", help="Skip saving the epub file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
     parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
     parser.add_argument("-m", "--model", type=str, default="gpt-5", help="Specify which model will be used to generate the textbook.")

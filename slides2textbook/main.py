@@ -1,8 +1,7 @@
 # The main orchestrator.
 from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
-from slides2textbook import md_saver
-from slides2textbook import md_to_pdf
+from slides2textbook import md_helper
 from slides2textbook import prompt_builder as pb
 from slides2textbook import cli
 from slides2textbook import logconfig
@@ -25,6 +24,7 @@ def main(argv: list[str] | None = None) -> None:
             name=name,
             save_md = args.save_md,
             make_pdf=args.make_pdf,
+            make_epub=args.make_epub,
             model=args.model,
         )
     except Exception:
@@ -33,7 +33,7 @@ def main(argv: list[str] | None = None) -> None:
     
 
 
-def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: bool, model: str) -> None:
+def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: bool, make_epub: bool, model: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
@@ -86,11 +86,14 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
         textbook_str += chapter
     
     if save_md:
-        md_saver.save_md(textbook_str, str(out_dir), name)
+        md_helper.save_md(textbook_str, out_dir, name)
         logger.info(f"Saved markdown to {out_dir}/{name}")
     if make_pdf:
-        md_to_pdf.mdToPdf(textbook_str, str(out_dir), name)
+        md_helper.md_to_pdf(textbook_str, out_dir, name)
         logger.info(f"Saved PDF to {out_dir}/{name}")
+    if make_epub:
+        md_helper.md_to_epub(textbook_str, out_dir, name)
+        logger.info(f"Saved EPUB to {out_dir}/{name}")
     if not save_md and not make_pdf:
         logger.warning("Nothing saved as both --no-md and --no-pdf flags were set. ")
 
