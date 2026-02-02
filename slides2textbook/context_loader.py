@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from pathlib import Path
 
 from openai.types import file_chunking_strategy
@@ -7,13 +8,17 @@ from slides2textbook import pdf_decoder
 
 logger = logging.getLogger(__name__)
 
+def _natural_key(value: str) -> list[object]:
+    parts = re.split(r"(\d+)", value)
+    return [int(part) if part.isdigit() else part.lower() for part in parts]
+
 def load_main_directory(path: Path) -> list[str]:
     """
     Load all the subdirectories and their files as their respective chapter context. 
     Each chapter context is created based on the context held within each chapter directory in alphabetic order.
     """
     logger.info(f"Loading main directory at Path: {str(path)}")
-    dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: p.name)
+    dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: _natural_key(p.name))
 
     if dirs:
         return [load_directory(chapter_context) for chapter_context in dirs]
@@ -29,8 +34,15 @@ def load_directory_chapters(path: Path) -> list[str]:
     Load directory as textbook context where each set of files that share the same basename is considered a seperate chapter context.
     """
     files = sorted(
-        (p for p in path.rglob("*") if p.is_file()), 
-        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+        (
+            p
+            for p in path.rglob("*")
+            if p.is_file() and p.name != "textbook_instructions.txt"
+        ),
+        key=lambda p: (
+            _natural_key(p.relative_to(path).parent.as_posix()),
+            _natural_key(p.name),
+        ),
     )
 
     if not files:
@@ -55,13 +67,16 @@ def load_directory(path: Path) -> str:
     Load directory as chapter context, recursive inclusion of subdirectories, sorted by relative folder, then filename.
     """
     files = sorted(
-        (p for p in path.rglob("*") if p.is_file()), 
-        key=lambda p: (p.relative_to(path).parent.as_posix(), p.name),
+        (p for p in path.rglob("*") if p.is_file()),
+        key=lambda p: (
+            _natural_key(p.relative_to(path).parent.as_posix()),
+            _natural_key(p.name),
+        ),
     )
 
     return load_context(files)
 
-def load_context(paths: list[Path] | Path) -> str:
+def load_context(paths: list[Path] | Path, return_instructions: bool = False) -> str:
     """ 
     Loads the list of paths and returns a combined LLM readable string.
     """
@@ -73,7 +88,8 @@ def load_context(paths: list[Path] | Path) -> str:
     common_path = Path(os.path.commonpath([str(p) for p in paths]))
     base_path = common_path.parent if common_path.is_file() else common_path
     for file in paths:
-        file.suffix
+        if not return_instructions and file.name == "textbook_instructions.txt":
+            continue
         key = file.relative_to(base_path).as_posix()
         match file.suffix:
             case ".pdf":
@@ -84,6 +100,13 @@ def load_context(paths: list[Path] | Path) -> str:
                 logger.error("Unsupported filetype included in context")
                 raise SystemExit(1)
     return context_formatter(context_dict)
+
+def load_instructions(path: Path) -> str:
+    path = path / "textbook_instructions.txt"
+    if path.is_file():
+        return load_textfile(path)
+    else:
+        return None
 
 def context_formatter(context_dict):
     """

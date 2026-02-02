@@ -40,6 +40,17 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
 
     context: list[str] = context_loader.load_main_directory(path)
 
+    if not context:
+        logger.error("No context loaded, aborting program.")
+        return
+
+    instructions: str = context_loader.load_instructions(path)
+
+    if instructions:
+        logger.info(f"Textbook Instructions of length {len(instructions)} loaded.")
+    else:
+        logger.info(f"No textbook instructions loaded.")
+
     logger.info(f"Loaded textbook context, beginning to generate textbook of {len(context)} chapters.")
 
     input_tokens = output_tokens = 0
@@ -49,10 +60,14 @@ def run_pipeline(path: Path, out_dir: Path, name: str, save_md: bool, make_pdf: 
     final_context: str = ""
 
     for idx, chapter_context in enumerate(context):
-        if idx > 0:
-            final_context = "Previous chapter: \n" + textbook[-1] 
+        if instructions:
+            final_context = "Whole Textbook Instructions: \n" + instructions + "\n\n"
         else:
-            final_context = "You are now generating the first chapter of the textbook. Make sure to include the title of the book. "
+            final_context = ""
+        if idx > 0:
+            final_context += "Previous chapter: \n" + textbook[-1] 
+        else:
+            final_context += "You are now generating the first chapter of the textbook. Make sure to include the title of the book. "
             if name:
                 final_context += f"The provided name for the textbook is {name}, however you may modify or format this if you see fit. "
 
