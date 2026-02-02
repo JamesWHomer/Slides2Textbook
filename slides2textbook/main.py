@@ -82,7 +82,7 @@ def run_pipeline(
     # Combine chapters into textbook string
     textbook_str = "".join(textbook)
     
-    save_md(textbook_str, out_dir, name, save_md, make_pdf, make_epub)
+    save_files(textbook_str, out_dir, name, save_md, make_pdf, make_epub)
 
 def get_chapter_context(
     chapter_context: str,
@@ -117,7 +117,7 @@ def get_chapter_context(
 
     return "".join(parts)
 
-def save_md(textbook_str: str, out_dir: Path, name: str, save_md: bool = True, make_pdf: bool = True, make_epub: bool = True):
+def save_files(textbook_str: str, out_dir: Path, name: str, save_md: bool = True, make_pdf: bool = True, make_epub: bool = True):
     """
     Function to simplify run_pipeline.
     """
