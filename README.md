@@ -61,4 +61,4 @@ Note that context is loaded from the specified main directory. There are two way
 2. **Name Based**: Files in the folder are loaded in natural order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
 
 ## AI Policy
-AI can be used for guidance and as a stack overflow replacement, however any code written must be handwritten by a human. AI could be used easily to speed up development 100x in the short term, however this risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human.
+AI can be used for guidance, automatic code review and as a stack overflow replacement, however any code written must be handwritten by a human. I don't have any issues with AI development and AI could be used easily to speed up development 100x in the short term, however this risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human.
