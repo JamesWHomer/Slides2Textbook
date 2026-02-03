@@ -13,7 +13,7 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def generate(system: str, prompt: str, model="gpt-5", effort="high", structured_output: Optional[Type[BaseModel]] = None):
+def generate(system: str, prompt: str, model: str ="gpt-5", effort: str ="medium", structured_output: Optional[Type[BaseModel]] = None):
     messages = [
         {
             "role": "developer",
