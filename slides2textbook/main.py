@@ -66,6 +66,7 @@ def run_pipeline(
     textbook: list[str] = []
 
     for idx, chapter_context in enumerate(loaded_context):
+        logger.info("Generating chapter with context: " + chapter_context[:100].strip('\n') + "...")
         chapter_prompt = get_chapter_context(
             chapter_context,
             instructions,
@@ -81,8 +82,8 @@ def run_pipeline(
 
     logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
 
-    # Combine chapters into textbook string
-    textbook_str = "".join(textbook)
+    # Combine chapters into textbook string with spacing before each chapter
+    textbook_str = "".join(f"\n\n{chapter}" for chapter in textbook)
     
     save_files(textbook_str, out_dir, name, save_md, make_pdf, make_epub)
 
@@ -106,11 +107,11 @@ def get_chapter_context(
     else:
         parts.append(
             "You are now generating the first chapter of the textbook. "
-            "Make sure to include the title of the book. "
+            "Make sure to include the title of the book. (# Title)"
         )
         if textbook_name:
             parts.append(
-                f"The provided name for the textbook is {textbook_name}, "
+                f"The provided title for the textbook is {textbook_name}, "
                 "however you may modify or format this if you see fit. "
             )
 
