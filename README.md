@@ -1,5 +1,9 @@
 # Slides2Textbook
 
+## Disclaimer
+
+This is **not** a production ready (not even close) piece of software. There will be many fatal bugs, many issues and generally a lack of support. Use at your own risk. 
+
 ## FAQ
 
 Question: What is this?  
