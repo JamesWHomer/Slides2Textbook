@@ -45,9 +45,12 @@ Examples:
   `python -m slides2textbook -l maths_textbook/input -o maths_textbook/output`
   TODO: More examples
 
+## Context Loading
 Note that context is loaded from the specified main directory. There are two ways of loading context:
 1. **Folder Based**: Each folder (in natural sort order, similar to alphabetic however for example 1,2,3,...,10,11 instead of 1, 10, 11, ..., 2) is considered it's own chapter. All files/context within the subchapters are loaded individually. This is the recommended method.
 2. **Name Based**: Files in the folder are loaded in natural order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
+
+One feature that you may find useful is textbook_instructions.txt. When a txt file of that name is included in the main directory, it is used as instruction and included in the context of each LLM call, ensuring any specific instructions are followed.
 
 ## AI Policy
 AI can be used for guidance, automatic code review and as a stack overflow replacement, however any code written must be handwritten by a human. I don't have any issues with AI development and AI could be used easily to speed up development 100x in the short term, however this risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human.
