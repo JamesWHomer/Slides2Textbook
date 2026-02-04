@@ -1,5 +1,7 @@
 # Slides2Textbook
 
+A simple python command line tool that uses LLM's to convert context (slides, lecture transcripts, notes, etc) into well formatted, focused and coherent textbooks.
+
 ## Disclaimer
 
 This is **not** a production ready (not even close) piece of software. There will be many fatal bugs, many issues and generally a lack of support. Use at your own risk. 
