@@ -79,6 +79,7 @@ def run_pipeline(
         input_tokens += inp
         output_tokens += out
         logger.info("Finished generating chapter: " + chapter[:100].strip('\n') + "...")
+        md_helper.save_md(chapter, out_dir / "chapters", "Chapter-" + str(idx + 1))
 
     logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
 
