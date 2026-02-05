@@ -1,4 +1,5 @@
 # The main orchestrator.
+from ntpath import isfile
 from slides2textbook import pdf_decoder
 from slides2textbook import llm_tools
 from slides2textbook import md_helper
@@ -46,6 +47,13 @@ def run_pipeline(
 
     logger.info("Starting SlidesToTextbook, now loading context.")
 
+    if Path.is_file(out_dir / (name + ".md")):
+        textbook_str = context_loader.load_textfile(out_dir / (name + ".md"))
+        logger.info("Existing .md identified in out directory. Skipping LLM generation and saving extra documents.")
+        save_files(textbook_str, out_dir, name, False, make_pdf, make_epub)
+        return
+
+
     loaded_context: list[str] = context_loader.load_main_directory(path)
 
     if not loaded_context:
@@ -66,6 +74,11 @@ def run_pipeline(
     textbook: list[str] = []
 
     for idx, chapter_context in enumerate(loaded_context):
+        path = out_dir / "chapters" / f"chapter-{str(idx + 1)}.md"
+        if Path.is_file(path):
+            logger.info(f"A chapter in {out_dir}/chapters with the name 'chapter-{str(idx + 1)}' already exists. Skipping LLM call and using existing chapter.")
+            textbook.append(context_loader.load_textfile(path))
+            continue
         logger.info("Generating chapter with context: " + chapter_context[:100].strip('\n') + "...")
         chapter_prompt = get_chapter_context(
             chapter_context,
@@ -79,6 +92,7 @@ def run_pipeline(
         input_tokens += inp
         output_tokens += out
         logger.info("Finished generating chapter: " + chapter[:100].strip('\n') + "...")
+        md_helper.save_md(chapter, out_dir / "chapters", "chapter-" + str(idx + 1))
 
     logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
 
