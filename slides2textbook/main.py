@@ -47,10 +47,11 @@ def run_pipeline(
 
     logger.info("Starting SlidesToTextbook, now loading context.")
 
-    if Path.is_file(out_dir / (name + "md")):
-        textbook_str = context_loader.load_textfile(out_dir / (name + "md"))
+    if Path.is_file(out_dir / (name + ".md")):
+        textbook_str = context_loader.load_textfile(out_dir / (name + ".md"))
         logger.info("Existing .md identified in out directory. Skipping LLM generation and saving extra documents.")
         save_files(textbook_str, out_dir, name, False, make_pdf, make_epub)
+        return
 
 
     loaded_context: list[str] = context_loader.load_main_directory(path)
