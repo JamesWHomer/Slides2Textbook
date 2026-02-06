@@ -4,3 +4,4 @@ markdown-pdf
 pymupdf4llm
 pypandoc_binary
 pydantic
+markdown-pdf
