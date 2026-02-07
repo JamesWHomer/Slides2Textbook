@@ -176,3 +176,5 @@ cython_debug/
 # Project specific
 /output
 /input
+
+/textbooks
