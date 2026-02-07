@@ -20,6 +20,7 @@ def save_md(md: str, out_dir: Path, name: str) -> None:
 def _md_to_pdf_pandoc(md: str, out_path: Path, toc: bool) -> None:
     """Converts md string to PDF via pandoc (requires a TeX engine on PATH)."""
     extra_args = [
+        "--pdf-engine=xelatex",
         "--variable=geometry:margin=1in",
         "--variable=fontsize=11pt",
         "--variable=linestretch=1.15",
