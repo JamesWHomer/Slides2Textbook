@@ -1,0 +1,3342 @@
+[Music]
+[Music]
+he
+all right this is cs50 and this is week
+five uh and among our goals for today
+are to revisit some topics from past
+weeks but to focus all the more on
+design possibilities particularly by way
+of data structur so data structures
+again is this way VIA which you can
+structure your data but more
+specifically in C it's like how you can
+use your computer's memory in
+interesting and dare say clever ways to
+actually solve problems more effectively
+but we're going to see today that
+there's actually different types of data
+structures and we'll make the
+distinction between abstractions like
+highlevel descriptions of these
+structures and the lower level
+implementation details so to speak so in
+particular we'll talk first today about
+what we call abstract data types so an
+abstract data type is kind of like a
+data structure but it offers certain
+properties certain characteristics and
+it's actually up to the programmer how
+to implement the underlying
+implementation detail so for instance
+there's actually this abstract data type
+that's common in Computing known as a Q
+and from the real world most of us are
+presumably familiar with q's otherwise
+known in the US typically as lines or
+forming lines in fact I have here uh
+three stacks of cook uh three uh bags of
+cookies could I get like three
+volunteers to come up on stage and queue
+up okay I saw your hand first how about
+your hand second and in the blue in the
+blue okay come on down just you three
+come on over and if you want to queue up
+over here if you
+[Music]
+could come on down thank you as we begin
+do you want to introduce yourselves
+first hi my name is aell aritz um I'm a
+first year studying computer science and
+economics and uh I sleep at herot Hall
+okay all right next hi everyone my name
+is Katherine um I'm planning on studying
+engineering not sure mechanical or
+electrical yet but one of the two um and
+I'm currently in canid nice nice to meet
+hi everyone I'm Isabella I'm in Strauss
+and I plan on majoring in computer
+science wonderful well welcome to all
+three of you and I think this will be
+pretty straightforward I have here these
+three bags of cookies you formed nicely
+this line or this CU so if you'd like to
+come up first and take your cookies
+thank you and WR that way that's all
+there is to this demonstration your
+cookies as well right this way and your
+cookies right this way wonderfully well
+done thank you to our volunteers the
+point is actually sincere though simple
+as that demonstration was and as easy as
+it was to get those cookies cues
+actually manifest a property that
+actually is gerine to a lot of problem
+solving and Computing and the real world
+specifically cues offer this
+characteristic fifo first in first out
+and indeed as our volunteers just
+noticed as they queed up on stage 1 two
+three that is the order in which I
+handed them their cookies and dare say
+it's a very Equitable approach it's very
+fair first come first served might be a
+more casual way of describing fifo first
+in first out now structures like these
+actually offer specific operations that
+Mak sense and in the context of Q's we
+generally describe these operations as
+enqing and deqing so when our first
+three volunteers came up they enced and
+as I handed them each a bag of cookies
+they dced and exited in that same order
+now how could you go about implementing
+a q in code specifically in C well we
+can actually implement it in bunches of
+different ways but perhaps the most
+obvious is to Barrow our old friend
+namely arrays and we could use a data
+structure that looks a little something
+like this whereby we specify the total
+capacity of this data structure for
+instance we might store a total of 50
+people or just three in this case we
+might Define our structure then is
+containing those people as simply an
+array and if a person is a data type
+that we've defined in Weak past you can
+imagine each of our volunteers is indeed
+a person and we've stored them one after
+the other continuously in memory by way
+of this actual uh array but we do need
+to keep track inside of a CU using one
+other piece of data namely we need to
+keep track of an integer like the size
+like how many people are actually in the
+queue at this moment because if we have
+a total capacity of 50 I'd like to know
+if I only have three volunteers that I
+can do some quick arithmetic and know
+that I could have fit another 47 people
+in this same queue but it's finite of
+course if we had 50 volunteers all
+wanting cookies that's as many people as
+we could actually handle so there is
+this upper bound then on how many we
+could fit but there's yet other ways for
+storing data inside of a computer's
+memory and there's this other abstract
+data type known as a stack and stacks
+are actually omnipresent as well even
+though it's not necessarily the system
+you would want when you line up on stage
+for instance could we get three more
+volunteers okay I saw a hand here right
+here and right here come on down we'll
+have the orchestra come up this time all
+right come on
+over and if you wouldn't mind come on
+over we'll do introductions first this
+will be almost as easy as the last one
+if you want to introduce yourself and
+let me just stack you against the left
+turn this time so if you could go there
+and if you could come over here and if
+you could come over here we'll stack all
+three of you so you were first so you're
+first in the stack hi I'm SE I have no
+idea what I'm studying and I live in
+Strauss wonderful and next hi I'm tanai
+I'm studying econ and Cs and I live in
+Canada um hi I'm Claire I want to study
+applied math and I'm in Wigglesworth
+wonderful welcome to all three of you
+and if I may let me just Advance a bit
+more information about Stacks the
+catches that Stacks uh actually support
+what's known as lifo so last in first
+out which is sort of the opposite really
+of a q or a line so in fact you were
+last in line so here we have your
+cookies thank you so much if you'd like
+to exit that way we have your cookies
+here thank you so much we'd like to youd
+exit this way and oh even though you
+were first like lifeo doesn't really
+give you any cookies because you're
+first in not last in and so yeah okay
+points made we'll give you their cookies
+all right so thank you to all three of
+our volunteers but lifeo suffice it to
+say doesn't offer the same fairness
+guarantees as a queue or a line more
+traditionally and imagine just go lining
+up in any store or the dining hall or
+the like ideally you want the people
+running the place to adhere to that cue
+to that line so that fifo is preserved
+if you indeed care about being first
+whereas there are contexts in which lifo
+does actually make sense in fact if you
+think about Gmail your inbox or Outlook
+typically you're viewing your inbox as a
+stack right because when you get new
+mail where does it end up it actually
+ends up on the top on the top and the
+top and if you're like me odds are which
+emails do you tend to First first I mean
+probably the ones on the top the ones
+that came in last most recently that is
+and that might actually be to the
+detriment of people who emailed you
+earlier today or yesterday because once
+they sort of fall off the bottom of your
+screen frankly unless you click next you
+may never see those emails again but
+Stacks are indeed one way of storing
+data and Google and Microsoft presumably
+made the Judgment call that in general
+we users want to see the most recent
+data first the last information might be
+the first we want out now just in terms
+of nen
+the two operations that are analogous to
+enqing and deqing but with this property
+of lifeo are instead called push and pop
+so when our first volunteer came up on
+stage so to speak I pushed him onto the
+stack against the lecturn there second
+person was pushed third person was
+pushed and then when it was time to hand
+out the cookies we popped them so to
+speak one after the other but preserving
+that lifo property but here's where
+things are a little interesting in terms
+of implementation details a stack could
+be implemented almost identically
+underneath the hood to a queue because
+what do you need you need an array of
+people which we could use our person
+data type for for per uh past classes we
+have to keep track of how many people
+are in the stack so that even if we have
+a capacity of like 50 we know at least
+that we can store three plus maybe 47
+others now there's still going to be a
+change in the underlying implementation
+details because not picture here is the
+actual C code that actually pushes and
+Pops or nq's and DQ's so whatever Loops
+you're using whatever code you're using
+odds are that's where those properties
+are going to be implemented fifo versus
+lifo you're going to implement maybe the
+loop in this direction instead of this
+one or some such distinction but at the
+end of the day stacks and cues are just
+abstract data types in the sense that we
+can Implement them in bunches of ways
+two of them among them here thus far on
+the screen but that array is going to
+come back to bite us because if you only
+have a capacity of 50 what happens if 51
+people want cookies next time like you
+just don't have room for them even
+though clearly we have enough room for
+the people themselves we have enough
+memory and so it seems a little
+shortsighted to limit just how much data
+can fit in our data structures so with
+that said a friend of our Shannon Duval
+at Elon University kindly put together
+uh a visualization of the same and allow
+me to introduce you to two fellows known
+as Jack and Lou if we could dim the
+lights for this
+[Music]
+video Once Upon a Time there was a guy
+named Jack when it came to making
+friends Jack did not have the Knack so
+Jack went to talk to the most popular
+guy he knew he went up to Lou and asked
+what do I do Lou saw that his friend was
+really distressed well Lou began just
+look how you're dressed don't you have
+any clothes with a different look yes
+said Jack I sure do come to my house and
+I'll show them to you so they went off
+to Jacks and Jack showed Lou the box
+where he kept all his shirts and his
+pants and his socks Lou said I see you
+have all your clothes in a pile why
+don't you wear some others once in a
+while Jack said well when I remove
+clothes and socks I washed them and put
+them away in the box then comes the next
+morning and up I hop I go to the box and
+get my clothes off the top Lou quickly
+realized the problem with Jack he kept
+clothes CDs and books in a stack when he
+reached for something to read or to wear
+he chose the top book or underwear then
+when he was done he would put it right
+back back at would go on top of the
+stack I know the solution said a
+triumphant Lou you need to learn to
+start using a queue Lou took Jack's
+clothes and hung them in the closet and
+when he had emptied the box he just
+tossed it then he said now Jack at the
+end of the day put your clothes in the
+left when you put them away then
+tomorrow morning when you see the sun
+shine get your clothes from the right
+from the end of the line don't you see
+said Lou it will be so nice you'll wear
+everything once before you wear
+something twice and with everything in
+cues in his closet and shelf Jack
+started to feel quite sure of himself
+all thanks to Lou and his wonderful
+Q so the same wonderful thanks to
+Shannon so you might have noticed I wear
+black all the time so we could make a
+similar gag about here's what my stack
+of clothes at homes looks like even
+might I even though I might own a blue
+and a red sweatshirt doesn't really work
+if you're popping everything from a
+stack every time cleaning it
+replenishing the black sweaters before
+the red or the blue even get popped
+themselves but we're going to focus
+today not just on like stacks and cues
+which for us are really meant to
+motivate like different ways of
+Designing data even though the
+implementation details might differ but
+we're going to start focusing on solving
+some problems that invariably we'd be
+bumping up against anyway as we develop
+more and more real world software not
+just smaller programs as in class and
+arrays recall are what like what's the
+key characteristic or definition of an
+array with respect to your computer's
+memory and storing things in it yeah it
+stores the data perfect so it stores the
+data contiguously back to back to back
+and as we've seen thus far when you
+allocate space for in Array you
+typically do it with square brackets you
+specify a number in those brackets or
+maybe a constant like capacity like I
+just did and that fixates just how much
+data you can actually store in there we
+did see last week though that we could
+start to use malok to allocate an
+equivalent number of bytes but even that
+when you call it just once gives you
+back a specific finite number of bytes
+so you're similarly deciding in advance
+how much m memory you can store in an
+array so let's consider what kinds of
+problems this could get us into so
+here's an array of size three and
+suppose for the sake of discussion we've
+already put three numbers into it one
+two and three literally suppose now we
+want to add a fourth number to that
+array well where does it go like
+intuitively and pictorially you'd like
+to think it could go there but remember
+the context we introduced last week when
+we talked about computers memories
+there's lots of stuff going on and if
+you only ask the computer the operating
+system for three room for three integers
+who knows what's here and here and here
+not to mention everywhere else on the
+screen so if we zoom out for instance we
+might like to put the number four there
+but we can't if in that greater context
+there's a lot more stuff going on so for
+instance suppose that elsewhere in my
+same programmer function I've already
+created a string like h o commas space
+world back sl0 just by bad luck that
+could be allocated right next to my 123
+why well if I ask the operating system
+for space for three numbers then I ask
+the operating system for space for a
+string it's pretty reasonable for the
+computer to put those things back to
+back because it's not going to
+anticipate for us that well maybe they
+actually want four numbers eventually or
+five numbers or more now as for all of
+these Oscars the Grouch that's just
+meant to represent uh pictorially here
+the notion of garbage values like
+there's clearly other bites there and
+available I don't know what it is and I
+don't care what it is but I do care that
+I can't just presume to put something
+right where I want in the computer's
+memory unless I preemptively ask it for
+more memory now if all of those are
+garbage values which is to say that who
+cares what they are it's just junk left
+over from previous runs of the function
+or the like there's clearly plenty of
+room for a fourth number I could put the
+number four here or here or here or down
+here or here or here but why would I not
+want to just plop the four wherever
+there is a garbage value currently yeah
+because you want to be next to your
+array of exactly I want it to be next
+next to my array of 1 2 3 because again
+arrays must be and must remain
+contiguous now that's not a deal breaker
+right because where else could I put
+maybe the entire array well there's room
+up here for four numbers there's room
+down here for four numbers so that's
+fine and that could be a solution to the
+problem if you run out of space in your
+fixed size array well maybe I just
+abstract everything else away and I just
+move my array to a different location
+that's a little bit bigger but there is
+going to be a downside even though this
+is a solution even though I can
+certainly copy the One the two the three
+and now I can plop the four there and
+heck I can then let go of the old memory
+in some way and give it back to the
+operating system to be reused later this
+is successful but why intuitively might
+we not want this to be our solution of
+creating a new array that's a little
+bigger copying the old into the new and
+getting rid of the old
+it good yeah I think I had one more step
+suppose I want to add a fifth number a
+six number like that's a lot of work and
+in fact what's the expensive part or
+what's the slow part of that story yeah
+it takes a lot of time it takes a lot of
+time but specifically what's taking time
+if we can put our finger on it yeah and
+[Music]
+back okay for a for a period of time I'm
+using twice as much memory which
+certainly seems wasteful because even
+though I don't eventually need it it is
+going to kind of mushroom and then
+shrink back down which seems like an
+inefficient use of resources but what
+specifically is slow about this process
+too
+yeah in Middle you're itating original
+array yeah good choice of words you're
+iterating over the array to copy it over
+using a for Loop a while loop so it's
+probably like Big O of n steps just to
+copy the array and technically Big O of
+n plus one if we add one more but that's
+still Big O of n so it's the copying the
+moving of the data so to speak that's
+certainly correct but maybe it's not the
+best design wouldn't it be better if we
+could do something otherwise well let's
+consider what this might actually
+translate into in code and what the
+implications then might be let me switch
+over here to VSS code let me propose to
+open up a file called list. C uh brand
+new and just let's create this list of
+numbers and then add to it over time and
+see when and where we actually bump up
+against these problems so let me include
+standard i.h in order to Simply uh be
+able to print things out ultimately in
+main void so no need for command line
+arguments here let me give myself a an
+array called list of just of size three
+for consistency with the picture thus
+far and now let me go ahead and just
+manually make it look like in memory
+what it did on the screen so list
+bracket 0 is going to equal the number
+one list bracket 1 is going to equal the
+number two and list bracket two equals
+the number three so even though the
+array is of course zero index I'm just
+sort of using more familiar 1 two 3 as
+my digits here now suppose I want to
+print these things out let's just do
+something as a simple exercise so for in
+I equal 0 I is less than 3 I ++ uh
+inside of this Loop I'm going to do
+something simple like print out iter
+iteratively as you note uh back sln list
+bracket I so very simple program it's
+not the best design because I've got
+this magic number there I'm hardcoding
+the three but the point is just to go
+through the motions of demonstrating how
+this code
+works ah good you got oh you got it in
+before I hit compile so wait thank you
+all right very maybe a round of applause
+thank you okay
+all
+right all right so this is going to get
+aggressive though eventually so let me
+add the semicolon let me recompile this
+list seems to compile okay and if I do
+do/ list I should see of course 1 two 3
+so the code works there's no memory
+constraints here because I'm not trying
+to actually add some values but let me
+consider how I could go about
+implementing this idea of copying
+everything from the old array to the new
+array frankly just to kind of see how
+annoying it is how painful it is so
+you're about to see the code escalate
+quickly and it will be helpful to try to
+wrap your mind around each individual
+step even though if you take a step back
+it's going to look like a crazy amount
+of code to solve a simple idea but
+that's the point we're going to get to a
+place particularly in week six where all
+of what we're about to do reduces to
+like one line of code so hang in there
+for now so let me go ahead and do this
+if I want to create a version of this
+code that can grow to fit more numbers
+for instance how can I go about doing
+this or at least demonstrate as much
+well I cannot use an array in this
+traditional way of using square brackets
+because that makes list the variable
+forever of size three I can't free it
+remember free you can only use with Malo
+so you can't give it back and then
+recreate it using this syntax but I can
+use this trick from last time whereby if
+I know there is this function called
+malok whose purpose in life is to give
+me memory I could for instance redeclare
+list to be a pointer so to speak that is
+the address of a chunk of memory and I
+could ask malok for a chunk of memory
+namely of size three but not three per
+se three integers for good measure so
+technically that's three times the size
+of whatever an INT is now for our
+purposes today that's technically 3 * 4
+or 12 but I'm trying to do this very
+generally in case we use it on an old
+computer or maybe a future computer
+where the size of an INT might very well
+change that's why I'm using size of int
+it will tell me always the correct
+answer for my computer so to use malok
+not going to catch me on this one what
+header file do I need to
+add standard standard standard li. so
+I'm going to go ahead and include
+standard li. which gives me access to
+malok and what I'm going to additionally
+do is practice what I preached last week
+whereby in extreme cases malok can
+return not the address of an actual
+chunk of memory what else can malok
+return in cases of
+error yeah no no n l in all caps which
+represents technically address zero but
+you're never supposed to use address
+zero so it's a special Sentinel value
+that just means something went wrong do
+not proceed so it's going to add some
+bulk to my code but it is good practice
+so if list at this point actually equals
+equals no there's no more work to be
+done here I've got to abort the demo
+altogether so I'm going to return one
+just arbitrarily to say we're done with
+this exercise it's not going to be
+Germain for class we can surely find
+room for three integers but best
+practice whenever using uh malok now
+this code here does not need to change
+because list is now still a chunk of
+memory of size 12 I can actually get
+away with still using square bracket
+notation and treating this chunk of
+memory as though it's an array and this
+is a bit subtle but recall from last
+time we talked briefly about Pointer
+arithmetic whereby the computer can do
+some arithmetic some addition
+subtraction on the actual addresses to
+get from one location to the other and
+that's what the computer's going to do
+here because it says list bracket at
+zero that's essentially just going to
+put the number one literally at the Chun
+that beginning of that chunk of memory
+and because this is a modern computer
+it's going to take four bytes in total
+but I don't want to put the number four
+here to shift it over myself because I'm
+using square brackets and because the
+computer knows that this this chunk of
+memory is being treated as a chunk of
+addresses of integers pointer arithmetic
+sort of magically kicks in so what the
+computer's going to do for me is put
+this one at location zero it's going to
+put this number two at location one time
+size of in so four and it's going to put
+this number three at location 2 times
+size of int which gives me eight so in
+other words you don't have to think
+about how big that chunk of memory is if
+you already gave the compiler a clue as
+to the size for our purposes today don't
+worry too much about that the bigger
+takeaway is that when you allocate space
+using malok you can certainly treat it
+as though it's an array using week 2
+notation which is arguably simpler than
+using dots and stars and and all of that
+but this isn't quite enough now because
+let me stipulate that for the sake of
+discussion at this point in time here on
+line 16 where the cursor is blinking
+suppose I realize just for the sake of
+discussion like ah I should have
+allocated space for four integers
+instead of three now obviously if I were
+writing this for real I should just go
+fix the code now and recompile it all
+together but let's just pretend for the
+sake of discussion that somewhere in
+your program you want to dynamically
+allocate more space and free up the old
+in order to implement this idea of
+copying from old to new memory so how
+could I do that well let me go ahead and
+temporarily give myself another chunk of
+memory and I'm going to literally call
+it TMP for short which is a common
+convention temp I'm going to set that
+equal to the amount of space that I
+actually do now want so I'm going to say
+four times the size of an INT so
+technically it'll give me 16 but space
+for four integers this time and what
+that's doing for me in code is essenti
+ually trying to find me four space for
+four integers elsewhere that might very
+well be garbage values now but I can
+therefore reuse them so once I've done
+this something could still go wrong and
+I could check if temp equals equals no
+then actually I should exit all together
+and finish up but there's a subtlety
+here and you don't need to dwell too
+much on this for today but there is
+technically a bug right now why based on
+week four last week might it not be
+correct technically to immediately
+return one and abort the program Al
+together at this
+[Music]
+point okay so when you allocate memory
+sometimes there might be garbage values
+there that is true but that is to say
+that those 16 bytes might be garbage
+values have Oscar the grouches all on
+the screen but temp itself will
+literally be the return value of malok
+and malok will always return to the
+address of a valid chunk of memory or it
+will return null so this line is
+actually okay what I don't love is that
+I'm returning one
+[Music]
+immediately yes so this is where it's
+subtle it's not quite right to just
+abort right now and return one why
+because up here remember few moments ago
+we used malok presumably successfully
+because if we got all the way down here
+we did not abort on line nine so we kept
+going but that means we've allocated
+three times size of in so 12 bytes
+earlier so frankly if you compile this
+code run it and then ask Valens it's
+going to identify a memory leak of size
+12 because as you know we did not free
+the original memory so this is where
+frankly C does get a little annoying
+because you and I as the programmers
+have to remember all of these details so
+what I really want to do here before I
+return one to be best practice I want to
+free the original list so I give back
+those bytes to the operating system now
+as an aside Technically when any program
+quits all of the memory is going to be
+given back to the operating system but
+practicing what I'm preaching now will
+get you into better situations later
+because if you don't free up memory you
+will have leaks and that's when our own
+Max and PCs tend to start to slow down
+and use up more memory than they should
+but let's avoid discussion of more error
+cheing there let's just assume that now
+I'm on line 23 of this program whereby I
+have presumably successfully allocated
+enough space so the next step after
+allocating these four bytes is to as you
+noted earlier iteratively copy the old
+numbers into the new space so this is
+actually pretty straightforward I'm
+going to go ahead and four in I gets
+zero I is less than three i++ just like
+I was printing last time I'm going to go
+ahead and set the E location of temp
+equal to the E location of list
+semicolon and that's it I'm just copying
+into the temporary array whatever was in
+the old array but that still leaves me
+with this fourth bite of course this
+four or sorry this fourth location where
+I want to put the number four but if I'm
+going to do that for the sake of
+discussion even though this isn't really
+a compelling real world program I'm
+going to just manually go into the last
+location in temp AKA temp bracket 3 and
+set that equal to my fourth number so
+that's all the whole point here is to
+mimic in code what it was we wanted to
+do here but now there's one more step
+what was the next step after copying the
+one the two the three and adding the
+four what do I want to
+do now I can safely free the list now I
+want to go ahead and get rid of the
+original memory or at least hand it back
+to the operating system so here is where
+I can free the list not in the case of
+an error but actually deliberately free
+the original list because I don't need
+those 12 bytes anymore but now if I want
+to really have quote unquote list point
+at this new chunk of memory well then I
+could also do this list equals temp so
+this is a little weird but recall that
+list has just now been freed so even
+though list technically contains the
+address of a chunk of memory it's no
+longer valid because again it was freed
+so yes it's still technically there but
+it's effectively garbage values now so
+I'm certainly free no pun intended I'm
+certainly allowed to update the value of
+list and I want list to now point to the
+new chunk of memory so sort of
+metaphorically if list was originally
+pointing at a chunk of memory there
+maybe now I want it to point over here
+so I'm just updating the value of list
+ultimately all right now that I've got
+this all done I think I can just use the
+same loop as before I could change the
+three to a four because I now have four
+numbers uh at the very bottom of this
+program though also subtle I should
+probably now at the very end free this
+list and for good measure let me go
+ahead and return zero but now I think I
+have a complete program that again to be
+clear is not how you would write this in
+the real world because you would not
+allocate three B three integers then uh
+decide you want to allocate for then fix
+all of this but we could probably borrow
+copy and paste some of this code into
+production code eventually whereby this
+would solve some actual problems
+dynamically so let me cross my fingers
+make list so far so good/ list and I
+should see 1 2 3 4 so long story short
+it's a lot of work just to get from the
+original array to the second so ideally
+we would not do any of this in the first
+place ideally what could we do instead
+well maybe we should just allocate more
+memory from the GetGo in order to avoid
+this problem altogether so how might I
+do that well instead of having allocated
+three uh an array of size three let
+alone an array of size four why don't I
+just proactively from the beginning of
+my program allocate an array of size 30
+or heck 300 or 3,000 and then just keep
+track of how much of it I'm using like
+that would be correct it would solve the
+problem of not painting yourself into a
+corner so
+quickly but what remains as an
+issue I'm using a bunch more memory
+especially if this is program is only
+going to ever manage a few numbers why
+are you wasting a hundred times more
+memory than you might actually and
+there's another Corner case that could
+still arise even though this sort of
+solves the
+problem exactly we can eventually still
+run into the exact same problem because
+if I want to put 301 numbers in the list
+or 3,001 well I'm still going to have to
+jump through all of these hoops and
+reallocate all of that space and
+honestly now per your concern about the
+looping iterating 300 times 3,000 times
+is certainly eventually going to start
+to add up if we're doing it a lot in
+terms of speed and slow down so maybe
+there's a better way all together than
+doing this and indeed there is if we
+start to treat our computer's memory as
+a canvas that we can start to use to
+design data structures more generally
+arrays are a data structure arguably
+they're super simple they're continuous
+chunks of memory but we could use memory
+a little more cleverly especially now
+per last week that we have pointers
+which is sort of painful as they might
+be to your mind around sometimes they
+really just let us point to different
+places in memory and so we can start to
+Stitch things together in an interesting
+way so the only syntax we'll really need
+to do that to sort of Stitch things
+together in memory and build more
+interesting structures are these things
+struct which allows us to represent
+structs already and we did this with
+persons and we played with this last
+time as well and we saw it already for
+cues and stacks the dot operator we
+haven't used it that much but recall
+that whenever you have a struct you can
+go inside of it using the dot operator
+and we did that for a person person.
+name and person. number when we were
+implementing a very simple address book
+the star was new last week and it can
+mean different things in different
+context you use it when declaring a
+pointer but you also use it when
+dereferencing a pointer to go there but
+just so you've seen it before it
+actually tends to be a little Annoying a
+little confusing to use star and Dot
+together you might remember one example
+last week we in parentheses I put star
+something and then I used the dot
+operator to go there and then go inside
+the structure long story short we'll see
+today that you can combine simultaneous
+use of star and Dot into something that
+actually looks like an arrow something
+that vaguely looks like a foam finger
+that might be pointing from one place to
+another so we'll see that actually in
+some code so where can we take this well
+let's implement the first of these ideas
+namely something that's very canonical
+in Computing known as a linked list and
+let's see if we can maybe do this how
+about Scully could we get you to come on
+up and volunteer here so our friend
+Scully uh there's some cookies in this
+for you so skul's come prepared with a
+whole bunch of balloons to represent
+chunks of memory because we'd like to
+paint a picture here of what's involved
+in actually allocating space that's not
+necessarily contiguous and might be over
+there or over here or over here in the
+computer's memory so for instance if I
+want to start allocating space one at a
+time for a list of numbers Scully could
+you go ahead and maloc one balloon for
+me and in this balloon I'll store for
+instance the number one ultimately so we
+have a balloon here we rehearsed this
+before and these balloons are actually
+really hard to blow up and tie off
+quickly so thank you so here we have a
+chunk of memory and I could certainly
+for instance go in here and store if I
+might the here we go I could certainly
+go ahead here and store in this balloon
+for instance like the number one but if
+in the world of an array it would just
+be back to back to back and actually
+frankly why don't we need the balloons
+even I could just use these numbers 1 2
+3 but the problem does indeed arise note
+that when we want to put a fourth number
+well where does it go well again just to
+paint a picture ideally I might allocate
+space for uh four but if this is my
+array of size three like where does it
+go like this is the point we can't just
+put it next to the three maybe there's
+room for the four over here but we have
+to somehow connect these from one to the
+other so in fact let's sort of act that
+out so if I instead use this balloon
+metaphor of just allocating space from
+wherever it is can you go ahead and
+allocate like another chunk of memory
+for me and here is where I'll now have a
+chunk of memory in which I can store the
+number computer's a little
+slow so in here the second balloon I'll
+have a separate choke of
+memory there we go okay good second
+chunk of memory thank you
+Scully now I can certainly
+I can thank you I can certainly now
+store the number two in this chunk of
+memory but it's not necessarily
+contiguous like this chunk came from
+over here as per scully's position
+originally this trunk obviously is
+coming from over here and if you don't
+mind holding that for a moment this is
+breaking the metaphor of an array which
+was indeed contiguous and even though I
+as the human can certainly go over and
+walk next to her that's the equivalent
+of like copying values from one place to
+another what if we're a little more
+clever though and if Scully found space
+for this number one over here let's just
+leave this balloon here and if she's
+found space for the number two over
+there let's leave that balloon there but
+we do somehow have to connect these
+numbers together and here is where to
+I'll try to do this on the Fly maybe I
+could do something like this I can take
+this balloon here and I can actually tie
+a string to it so that if I want to
+connect one to the other we can sort of
+Link these if you will together and so
+here now I have a linked list that is
+not necessarily contiguous there's a
+whole bunch of memory that may very well
+have real value may very well have
+garbage values but I've somehow now
+linked these two together and maybe just
+as a final flourish if we could blow up
+one more balloon to represent more space
+and now she's finding room for that
+balloon over
+there nice this one is a Yale chunk of
+memory
+so now I'll
+need one more link if you will and if I
+actually connect these two in this way
+let me go ahead and tie this off
+here now I can go ahead and connect
+these
+two if you never see this demonstration
+again in next year's videos is because
+this did not go very well here here now
+we have the number one where we first
+mlocked it the number two roughly where
+we next maled and the number three okay
+so maybe we'll fix this some other year
+now we'll have the number three
+allocated there but the whole point of
+this silly exercise is that we can
+certainly use the computer's memory as
+more of a canvas put things where
+wherever we want wherever is available
+so long as we somehow connect the dots
+so to speak and can make our way from
+one chunk of memory to the next to the
+next thereby literally linking them
+together but of course we're using
+balloons for this metaphor but at the
+end of the day this is just memory so
+how could we in code link one chunk to
+another chunk to a third chunk might you
+think what's the trick yeah pointer
+using pointers right that's why we
+introduced pointers last week because as
+simple as an idea as it is is as hard as
+it is to write sometimes in code it's
+literally just a pointer sort of a foam
+finger pointing to another chunk of
+memory and so these pointers really are
+metaphorically being implemented now in
+with these pieces of string so we'll
+have to debrief later and decide if we
+ever do this demo again but thank you to
+Scully for
+participating okay we have plenty of oh
+okay but fair's
+fair there we go thank you to Skully so
+let's now translate this to something a
+little more concrete and then get to the
+point where we can actually solve this
+problem in code so here's that same
+canvas of memory and if in this canvas
+of memory now I actually want to
+implement this idea of the number one
+the number two the number three let's
+stop tying our hands in terms of
+expecting our memory to be contiguous
+back to back and start to move away from
+using arrays so for instance suppose I
+want a Malo space for the number one
+just as Scully I first asked of Scully
+suppose it ends up over there on the
+board the important thing for discussion
+here is that that number one wherever it
+ends up is surely located at some
+address and for the sake of discussion
+as in the past suppose the number one
+just ends up at location ox123 so ox123
+is where Scully was originally standing
+right here then we asked for malok for
+another chunk of memory suppose that it
+ends up over here at address Ox 456 so
+that's maybe roughly here when Scully
+was standing in her second position
+lastly we allocate the number three
+maybe it ends up at location Ox 789
+which was per scully's third malok
+roughly over here on stage now this
+picture alone doesn't seem to lend
+itself to an implementation of the
+string metaphorically to the pointers
+unless we allow ourselves a new luxury
+instead of just storing the number one
+two three in the our usual squares I
+think what I'm going to have to do is
+kind of cheat and use more memory to
+store what the pointers as you proposed
+so here's a trade-off that I promised we
+would sort of start to to see more and
+more if you want to improve your your
+performance in terms of time and avoid
+stupid copying of data from one place to
+another again and again and again if you
+want to save time you're going to have
+to give up some space and there's going
+to be this trade-off between time and
+space and it's up to you to decide
+ultimately which is more important so if
+you allow yourself not enough memory for
+the numbers one two and three but twice
+as much memory for the numbers one two
+and three and three pointers one for
+each what could we now do well if this
+node and this is a Computing term like
+node is just a generic term describing
+like a box of memory a chunk of memory
+in this case if I've given you this
+Blank Slate here what value would make
+sense to store here if it's associated
+with this number one yeah address of the
+next element good maybe the address of
+the next element so the next element
+technically supposed to be the number
+two so at this location I'm going to
+store the value Ox 456 what then
+logically should go here in the second
+box Ox 789 and then here's a little
+non-obvious it's the end of the list as
+of now so we can't afford to let it be a
+garbage value because a garbage value is
+a value and we don't want Oscar to
+effectively be pointing to some random
+location lest we go there so what would
+be a good Special Value to put here to
+terminate a list so null so not n which
+we used for Strings but same idea n l
+which we keep using now for pointers
+otherwise known as the zero address
+which I could just write for shorthand
+as o x0 in this case which is the same
+thing as null so here then even though
+we've changed nothing about how a
+computer works this is just my
+computer's memory I'm using more memory
+now to effectively link one chunk to the
+next chunk to the next chunk so easy uh
+to note that the downside is more space
+but now we don't have to worry about
+ever copying and moving this data around
+which maybe over time for really big
+programs big data sets could very well
+be a net positive and a win for us so
+any questions first on this notion of
+what a linked list actually
+is no all right well recall from last
+time too that rarely do we actually care
+what the specific addresses are so this
+is one node two node and three nodes and
+inside of each of these nodes is two
+values the actual number we care about
+and then a pointer which in now this is
+actually an opportunity to introduce a
+term that might see increasingly
+nowadays data so 1 2 and three which we
+obviously care about in this case and
+then we could actually refer to these
+pointers more generally as metadata like
+it's actual data because it's helping me
+solve a problem get from one place to
+another but metadata is distinct from
+data and that I don't fundamentally care
+about the metadata that's like an
+implementation detail but it does help
+me organize my actual data so this is
+more of a highlevel concept so what
+though is a linked list it turns out the
+store a linked list will generally use
+just one more value and I'm going to
+draw it only as a square a single box
+because if I declare now in my code as I
+soon will a variable maybe called list
+that points to a sde this is effectively
+how I could Implement a linked list I
+use one node per value and I use one
+extra pointer to find the first of those
+nodes and in fact here again is where I
+don't need to care fundamentally where
+any of these addresses are it suffices
+to know that yes computers have
+addresses so I could just abstract this
+away and this is how I might pictorially
+represent a linked list a cleaner
+version of those three balloons whereby
+I was here this was scully's first
+balloon second balloon third balloon
+these arrows now just represent pointers
+or strings with the balloons so with
+that said how can we go about
+translating this to some actual code
+well here's where we can call into play
+some of that same syntax from last time
+and even a couple of weeks ago when we
+introduced the notion of a structure so
+here for instance is how we defined a
+couple classes ago the notion of a
+person why well C doesn't come with a
+person data type but we concluded it was
+sort of useful to be able to associate
+someone's name with their number and
+maybe even other fields as well so we
+typede a structure containing these two
+values we learned last week that string
+is technically charar but that doesn't
+change what the actual structure is and
+we call the struct a person well here's
+what we revealed last time again taking
+those training wheels off it's just a
+Char star let's keep going in this
+direction though if I want to Define not
+a person but maybe more generically
+something I'll call today a node like a
+container for my numbers and my pointers
+well I similarly just need two values
+not a name and a number which isn't
+relevant today but maybe the number as
+an actual int so I can store the one the
+two the three the four and so forth and
+this is a little less obvious but
+conceptually what should be the second
+value inside of any of these nodes yeah
+so indeed a pointer a pointer to what
+though a pointer to another node and
+here's where the syntax gets a little
+weird but how do I Define there to be a
+pointer in here to another node well you
+might be inclined to say node star next
+because this means next is the name of
+the property or the attribute the
+variable inside the struct star means
+it's a pointer what is it a pointer to
+clearly a node but here's where C can
+kind of bite you the word node does not
+exist until you get to this last line of
+code right C goes top to bottom left to
+right so you literally can't use the
+word node here if it's not existing
+until here the simple fix for this is to
+actually use a slightly ver more verbose
+way of defining a structure you can
+actually do this and we didn't bother
+doing this with person because it didn't
+solve a problem but if you actually make
+your first line a little more verbose
+and say Give me a definition for a
+structure called node now in here you
+can actually do this
+right this is sort of an annoying
+implementation detail when it comes to
+implementing structures in C but
+essentially we're leveraging the fact
+that because C code is read from top to
+bottom if you give this structure a name
+called struct node now you can refer to
+it here but you know what it's annoying
+to write struck node struck node struck
+node everywhere in your code so this
+last line now just gives you a synonym
+and it shortens struck node to just node
+so long story short this is a good
+template for anytime you implement some
+notion of a node as we will today but
+it's fundamentally the same idea as a
+person just containing now a number and
+a pointer to the next as opposed to
+someone's name and phone number so let
+me go ahead and walk through with some
+code how we might actually implement
+this process of allocating a balloon and
+putting a number on it allocating
+another balloon and putting a number on
+it and then connecting those two
+balloons again and again so we'll do
+this step by step in a vacuum so you can
+see the syntax that maps to each of
+these ideas then will actually pull up
+VSS code and combine it all and make a
+demonstrative program so here for
+instance is the single line of C code
+via which I can give myself the
+beginning of a linked list that is a
+pointer that will eventually be pointing
+to something so sort of metaphorically
+it's like creating a pointer right know
+we've gotten some some complaints about
+that in the audience we'll use the
+Harvard one to represent a pointer to
+something but if I only do this and I
+only say give me a variable called list
+that is a pointer to a node that's going
+to leave a garbage value so this is like
+pointing to some random location because
+it's previously some value who knows
+what it is but we can solve that how
+what would be a good initial value to
+set this equal to so null at least if
+it's null we then know that this isn't a
+garbage value this is literally o x0 AKA
+null and I'm just going to leave it
+blank for cleanliness so this would be
+the right way to begin to create a link
+list of size zero there's nothing there
+but at least now that foam finger is not
+pointing to some bogus chunk of memory
+some garbage value so this is how the
+world might exist now in the computer's
+memory how do I go about allocating
+space now for a node well it's just
+ideas from last week once the word node
+exists as by as via that type def I can
+just use malok to ask for the size of a
+node I don't have to do the math myself
+I don't care how big a node is just let
+it do the math for me then that's going
+to return presumably the address of a
+chunk of memory big enough for that big
+rectangle and I'm going to store that
+for now in a temporary variable called n
+that itself is a pointer to a node so if
+this might look like a lot altogether
+but this is just like before when I
+allocated space for a string or I
+allocated space for a bunch of numbers
+and set it equal to a pointer to
+integers for instance more recently all
+right so this gives me a box in memory
+this gives me a pointer called n so it's
+similarly just a single Square cuz it's
+just an address and it's similarly gives
+me a bigger chunk of memory somewhere in
+the computer's memory containing enough
+space for the per for the number that's
+going to go there a one a two a three or
+whatever and a pointer to the next value
+so these lines of code collectively this
+half creates this in memory this half
+creates this in memory and the
+assignment here the equal sign
+essentially does the equivalent of that
+I don't care what the address is the
+actual number it's as though and is now
+pointing to that chunk of memory but
+this isn't very useful if I want to
+store the number one here with what code
+can I do that well I could do this
+borrowing an idea from last week so star
+n presumes that N is a pointer star N
+means go there go to whatever you're
+pointing at the dot operator means if
+you're pointing at a structure go inside
+of it to the number field and we did
+this a couple of weeks ago with number
+and person when we implemented an
+address book so star n is go there and
+the dot operator means go to the number
+field the one on the right hand side and
+the equal sign means set whatever is
+there equal to the number one it turns
+out this is the syntax though that I
+alluded to being a little bit cryptic
+and not very pleasant to remember or
+type here though is where you can
+synonymously instead use this line of
+code which most C programmers would use
+instead this means n is still a pointer
+the arrow literally with a hyphen and a
+greater than sign means go there it's
+the exact same thing as the parenthesis
+with the star with the dot this just
+simplifies it to look like these actual
+pictoral arrows so this would be the
+most conventional way of doing this how
+now do I update the next field well I
+think I'm going to just say the same
+thing n Go there but go into the next
+field and set it equal to null why null
+if the whole point here was to allocate
+just one chunk of memory one node you
+don't want to leave this as a garbage
+value because that value will be
+mistaken for an arrow pointing to some
+random location all right that's a lot
+and again we're doing it in isolation
+step by step just to paint the picture
+on the screen but any questions on any
+of these
+steps each picture translates to one
+line of code there all right so if
+you're comfy enough with those lines
+there what can I proceed to now do well
+let me propose that what I could now do
+with this same approach is set list
+itself equal to n because if the whole
+goal is to build up a link list and list
+represents that link list list equals in
+is essentially saying whatever address
+is here put it here and pictorially what
+that means is temporarily Point both
+pointers to the same exact place why
+because this is the list that I care
+about longterm this is maybe my Global
+variable that I'm going to keep around
+forever in my computer's memory this was
+just a temporary pointer so that I could
+get a chunk of memory and go to its
+locations and update it with those
+values So eventually this is probably
+going to go away altogether and this
+then is a link list of size one this is
+what happened when Scully inflated one
+balloon I wrote the number one on it and
+we I pointed at that single balloon all
+right if I want to go ahead and do this
+again and again we'll do this a little
+more quickly but it's the same kind of
+code for now here's how I allocate space
+for another node here's how I can
+temporarily store in n and I'll
+redeclare it here just to make clear
+that it's indeed just a pointer so the
+left hand side of the expression gives
+me this the right hand side of the
+expression gives me this where could it
+be I mean I put it here it could have
+been there it could have been anywhere
+else but Malo gets to decide that for us
+n equals this just sets that temporary
+pointer equal to that chunk of memory I
+should clean this up how do I now put
+the number two into this node well I
+start at N I go there I go to the number
+field which I keep drawing on top and I
+set it equal to two now it's a little
+non obvious what we should do here so
+I'm going to be a little lazy at first
+and rather than put these numbers into
+the link list in sorted order like
+ascending order 1 2 3 4 I'm just going
+to plop it at the beginning of the list
+why cuz it's actually a little simpler
+if the a each time I allocate a new node
+I just prepended it so to speak to the
+beginning of the list even though it's
+going to end up looking backwards in
+this case so notice at this point in the
+story I've got list pointing to the
+original link list I've got n pointing
+to the brand new node and ultimately I
+kind of want to connect these just as
+Scully and I did with the strings this
+is just temporary so I want to connect
+these things here's how I could do it
+wrong if I proceed now and update oh
+rather after one more line setting the
+equal to Nell sorry let's at least get
+rid of that garbage value here's how I
+could proceed to maybe do this wrong let
+me go ahead and update for instance list
+equals n so if I update list equaling n
+that's going to point the list at this
+new node but what has just
+happened what did I do wrong
+yeah so nothing's pointing to one and
+even though you and I obviously have
+this like bird's eye view of everything
+in the computer's memory the computer
+doesn't if you have no variable
+remembering the location of that node
+for all intents and purposes it is gone
+so what I've essentially done is this
+when I update that pointer to point at
+the number two it's as though this this
+was a much nicer idea in theory when we
+talked about it but it's not really
+working but this is effectively what
+we've tried to achieve which is I've
+orphaned so to speak the number one and
+that two is a technical term in the
+context of memory if no one is pointing
+at it if no string is connected to it I
+have indeed orphaned a chunk of memory
+AKA a memory leak and valren would not
+in fact like this and Valen would in
+fact notice this so what would be the
+better approach instead of let me rewind
+instead of updating that address to be
+that of this node let's rewind to where
+we were a moment ago where list is still
+pointing at the original n is still
+pointing at the new chunk of memory and
+what should I do instead well what
+should I do is maybe this let's go to
+the next field of the new node so Follow
+the arrow go to the next field and what
+should I put here instead why don't I
+put the memory address of the original
+node how can I get that well that's
+actually this so if list is pointing at
+the original node I can just copy that
+address into this next field which has
+the effect of doing that albe it in
+duplicate I've updated the next field to
+point at the very thing that the
+original list is already pointing at and
+now for the sake of discussion let me
+get rid of my temporary node called n
+and what you'll see ultimately is that
+that what once we set list equal to n
+and get rid of it now we can just treat
+the whole link list as being con
+connected in Linked In This Way how do
+we do this again we won't belabor the
+point with more but suppose I want to
+allocate a third node I have to do the
+exact same thing but I have to update
+this next field to point at the existing
+list before I update list itself long
+story short order of operations is going
+to be super important and if I want to
+stitch these data structures together
+together if I would encourage you to
+think ultimately certainly when it comes
+time to write something like this think
+about what it is that we're actually
+trying to tie together so let me go
+ahead and do this I'm going to go over
+to VSS code here I'm going to delete the
+old code for list. C and perhaps now we
+can transition away from our old
+approach and actually do something with
+these pointers instead so I'm going to
+go ahead and let's say include as
+before uh include standard IO .h let's
+go ahead and include standard li.
+proactively and let's go ahead and
+create that data type so type def a
+struct called node and inside of this
+node let's give us an integer called
+number to store the one the two the
+three the four and then let's create a
+struct node star value called Next whose
+purpose in life is going to point to the
+next node in any such list I'm going to
+shorten the name of all this to just
+node simply and then in main let's go
+ahead and do this we'll bring back our
+friend uh argc and argv so that I can
+actually Implement a program this time
+that lets me construct a link list using
+numbers that I just passed at the
+command line I don't want to bother with
+get int again and again or the cs50
+library so let's just use argc and argv
+but with argv recall string now as of
+last week is synonymous with Char star
+so that's the exact same thing as we've
+used in week two onward for command line
+arguments so what do I want to do my
+goal in life with this demonstration is
+to create encode this linked list here
+or at least the beginnings thereof so
+how can I do this let me go back into
+VSS code let me declare a linked list
+called list but initialize it to null so
+there's nothing there just yet how now
+can I go about building this linked list
+uh by taking numbers from the command
+line so let's do this uh four in I = 1 I
+is less than ARG c i ++ let me go ahead
+and do this I'm going to go ahead and
+just for the sake of discussion let me
+print out where we're going with this
+let me go ahead and print out percent s
+back sln whatever is in Arvy bracket I
+so I'm not doing anything interesting
+yet but let's just demonstrate where
+we're going with this let me go ahead
+and make
+listlist and let me put the numbers 1 2
+and three as command line arguments
+enter there we just have those numbers
+spit out I'm just kind of jumping
+through this hoop to demonstrate how I'm
+getting those values but notice the
+values in RV are always strings AKA Char
+star so if I actually want to convert a
+string to an integer like this how can I
+do this I want to set the number
+variable equal to RV bracket I but RV
+bracket I is a string How can I convert
+a string to a number anyone
+recall yeah a a to I so asky to I so
+asky to integer so if if I do
+a2i I can actually convert one to the
+other in this way and now I can actually
+print this as an INT instead of a string
+now that's not going to change the
+Aesthetics of the program if I print it
+out again but it does in fact give me an
+integer to work with but let's not
+bother printing it let's instead put
+this number and any other number at the
+command line into a linked list so let
+me go ahead and allocate a pointer
+called n let me set it equal to the
+return value of malok asking malok for
+the size of one node ideally that will
+give me a chunk of memory that can fit
+this number and a pointer just for good
+measure I'm going to check well if n
+equals equals null then actually this
+isn't going to work so we should
+probably you know free memory thus far
+so I'm just going to leave this like
+this because there's a few steps
+involved so free memory thus far um and
+then we can go ahead for instance and
+return one all right if now I don't have
+an error and N is not in fact null but
+it's a valid address I can go into N I
+can follow that pointer to the number
+field and set it equal to the actual
+number so this is a little strange at
+first glance that I've got number on the
+left and number on the right but they're
+different n is currently pointing at a
+chunk of memory that big enough to fit a
+node n bracket uh n arrow number means
+go to that chunk of memory and go to the
+top half of the rectangle and update
+that number to be whatever the human
+typed in after we've converted it on
+line 16 here to an actual
+integer all right what next do I do n
+bracket or n arrow next should probably
+be at this point initialized to null and
+how now do I actually add this node n to
+my original linked list well I could
+just do list equals n and that would
+update all the foam finger my list
+variable to point at this new node but
+we said before that that's potentially
+bad why because if list is already
+pointing at something we can't just
+blindly change what it's pointing at
+because we'll have orphaned any previous
+numbers it's not relevant at the moment
+because we're still in the first
+iteration of this Loop but we don't want
+to Orphan or leak any memory so what do
+I first want to do before I actually
+point the length list at that new node
+I'm going to say instead say go to this
+current node Arrow next and actually set
+that equal to list so strictly speaking
+don't actually need to initialize it to
+null I can initialize the next field of
+this new node to point at the existing
+list so what I'm going to do here is
+instead of initializing the next field
+equal to null if I want to insert this
+new node in front of any nodes that
+already exist I can simply say set the
+nodes next field equal to whatever the
+list currently is and now in this last
+line I can update the list itself to
+Point N so after after this let's just
+go ahead and do something relatively
+simple even though the Syntax for this
+is going to look a little complicated at
+first how do I go about printing uh the
+whole list so print whole list well
+there's a couple of ways to do this but
+if you imagine a world if we fast
+forward to a world in which we now have
+a link list of size three for instance
+here's where we might be at some point
+in the computer's memory we've inserted
+the one then we inserted the two then we
+inserted the three but because we're
+prepending everything it actually looks
+like 321 so how could I go about
+printing this well ideally I could do
+this if a computer can only look at one
+location at a time I can sort of grab my
+foam finger and point at the three and
+print it out point at the two and print
+it out point at the one and print it out
+and then because this is null I'm all
+done pointing and printing but how can I
+translate this to actual code well I
+could Implement that foam finger so to
+speak in the following way I could give
+myself a pointer often abbreviated by
+computer scientists as PTR specify that
+that's indeed a pointer to a node as per
+that star and initialize that pointer to
+be the list itself so this is the code
+equivalent of if I have this same
+picture on the screen declaring a
+pointer variable and point it at
+whatever the list itself is uh storing
+first and now that's akin to doing this
+if I now go back into my code how can I
+do this well so long as that pointer
+does not equal null that is so long as
+that pointer is not at the end of the
+list let me go ahead and print out using
+print F an integer with backs SL with
+percent I and then let's print out
+whatever I'm currently pointing at in
+PTR Arrow number so whatever I'm
+pointing at go there and print the
+number that you find uh after that what
+do I want to go ahead and do I'm going
+to set pointer equal to pointer Arrow
+next so what does this mean if I go back
+to my picture here and I want to
+actually walk through through this thing
+that first line of code ensures that
+this foam finger AKA PTR represented
+here is pointing at the first element of
+the list once I've printed it out with
+print F I'm then doing P pointer equals
+pointer next which is like following
+this next Arrow so PTR now points at the
+two I then print that out and set
+pointer equal to pointer next that's
+like following this arrow and updating
+pointer to point at this node Instead at
+that point it's the next step is going
+to be to point it to null so for intents
+and purposes I'm done and that's why we
+can actually get away with this while
+loop because while pointer is not null
+it's going to print and print and print
+now let me go into my terminal window
+let me go ahead and make list and really
+hope I didn't make any mistakes because
+there's a lot all at once seems to have
+compiled okay when I run dot slash list
+of 1 2 3 theoretically this code if
+correct should unbeknownst to me build
+up an entire length list in memory but
+what's it going to print out
+ultimately what do you think it's going
+to print
+yeah uh could print out no uh if I
+really screwed up yes what
+else or could print out 321 and frankly
+that's what I'm hoping for so even
+though I've given it in argv 1 2 3
+because I'm prepending to the beginning
+of the list the beginning of the list
+beginning of the list each time I think
+indeed we're going to see 3 2 1 now
+that's fine that's correct but it's not
+necessarily what we might want so how
+could we actually go about inserting
+things maybe uh otherwise because in
+fact if we consider this algorithm
+what's the running time of insert the
+running how many steps are required
+right now given a link list of size n if
+you want to go ahead and insert one more
+node there's actually a reason I took
+this lazy approach of prepending
+prepending in Big O notation how much
+does it cost us to insert into a link
+list
+think about it this way does it matter
+how many nodes are already in the link
+list whether it's one or two or three or
+300 or 3,000 if you're prepending
+doesn't matter how long that chain is
+you're just constantly putting it in the
+beginning at the beginning at the
+beginning now how many steps is this I
+don't know exactly I'd have to count the
+lines of code but it's some small number
+it's like two steps three steps how many
+lines of code is it it's very few to
+preen Preen so I would dare say that the
+running time of insertion into a linked
+list is actually constant time it's Big
+O of one and that's super fast because
+it doesn't matter how big the list is
+boom boom boom you've prepended to the
+list but there's a flip side what's the
+running time of searching a linked list
+looking for something in
+it finding a number in it well if it
+looks like this how long does it take
+you to find some arbitrary number that
+the human might ask you for like how
+many steps will it take to find me the
+number one if it's there so n big of end
+because in the worst case the number
+you're looking for might be all the way
+at the end and even though you and I
+again have this bird's eye view and we
+can obviously see where the one is the
+only way we can get to the one is by
+starting at the two how do you get to
+the two you got to start at the three
+how do you get to the three you've got
+to start at the beginning of the list
+itself and so whereas in the world of
+arrays where you had this contiguous
+chunk of memory just like we had lockers
+on the stage weeks ago and you could
+jump to the middle and then the middle
+of the middle and the middle of the
+middle of the middle that was all
+predicated on contiguousness why because
+if you know where the first uh Locker
+was and you know where the last Locker
+was you can subtract one from the other
+divide by two and boom you get the index
+or the location numerically of the
+middle locker and you can do that again
+and again I cannot do any such math here
+the middle of this link list is
+obviously here but it doesn't matter
+what the location of this one is in
+memory doesn't matter what the location
+of this is in memory because they could
+be anywhere in the computer's memory so
+you can subtract one from the other
+divide by two and that's going to put
+you in some random location because
+these chunks of memory are not back to
+back to back to back they're Every Which
+Way so this is to say what algorithm
+from week zero can we not use unlink
+lists so binary search so that very
+algorithm we started the class with was
+all predicated on contiguous chunks of
+memory like an array the problem with an
+array though of course though is that
+you paint yourself into this corner and
+you have to know in advance how many
+locations you want and if you round up
+your wasting space if you round down
+your wasting time so you're sort of
+screwed either way a link list avoids
+those problems it's more of a dynamic
+data structure that can grow and frankly
+if we code it up it could even shrink we
+could remove these nodes back and forth
+and so we're not necessarily wasting
+time but on insertion but we are un
+searching this thing we're back to Big O
+of n when it comes to searching a linked
+list as opposed to it being log n which
+was much much better so the upside of
+prepending the nodes in this way is that
+we have constant time insertion of of
+new nodes because we just continually
+insert insert insert into the very
+beginning of the list of course a side
+effect of this is that the numbers might
+end up in like completely reverse order
+as they have here because I first
+inserted one but then I prepended two
+and then I prepended three well we could
+perhaps take a completely different
+approach and append the nodes upon
+insertion instead so for instance if I
+start off with an empty list I could
+then insert one I can insert two and I
+can insert three and in this case I
+actually get a bit lucky that now they
+are in fact in sorted order now to be
+fair that's not guaranteed but let's at
+least consider what the code would look
+like if we were to take this alternative
+approach of a pending nodes instead of
+prepending well rather than write out
+the code from scratch let me open up a
+pre-made version of list. C that even
+has some comments to explain what's
+going on some of this code is pretty
+much the same but allow me to scroll
+down roughly to the Middle where we'll
+see the actual logic in question so
+first on line 35 here we're checking if
+the list is null because if there's no
+list yet it's actually pretty pretty
+easy to prepend or append we're just
+going to go ahead and update the list
+variable to point to this new node n but
+if the list isn't empty and there's at
+least one node there already well then
+what we're going to do is this in line
+45 we're going to iterate over that
+existing linked list and I'm going to do
+so with a a temporary variable called
+pointer or PTR for short that's
+initialized to the beginning of the list
+sort of a foam finger pointing at that
+first note initially I'm going to on
+every iteration update that pointer
+variable point to the next node to the
+next node sort of pointing one node
+ahead with that foam finger but on each
+iteration I'm also going to make sure
+that the pointer variable is not null
+because if it is null that means I'm
+sort of pointing past the end of the
+list or that is the list has ended but
+if inside of that loop I notice that the
+current nodes next field is null I
+actually know logically that I'm at the
+end of the list without going past it so
+at that point if my goal is to append
+this new node I'm going to go ahead and
+set pointer Arrow next which is
+currently null but set it equal to the
+address of this new node effectively
+appending that node to the end of the
+list so for instance if we started with
+a list of one and two what we've just
+done is updated two's next field to be
+equal to the address of the node
+containing three meanwhile the node
+containing 3's next field is null by
+default because it is now the new end of
+the list now what are the implications
+for maybe performance or efficiency now
+well we are now appending to the list
+which means we're no longer gaining
+constant time of insertion right because
+anytime we prepended it it took us some
+finite number of steps we we just had to
+update a couple of pointers at the
+beginning of the list the beginning of
+the list and it doesn't actually matter
+how much longer the list is getting
+because we're never traversing the list
+when we're prepending but when we're app
+pending by definition we're finding the
+end of the list finding the end of the
+list finding the end of the list and so
+our running time now for insertion is no
+longer big Big O of one or constant time
+it's now Big O of n because if there's n
+nodes in the list already just to find
+the end of it we need to actually
+Traverse the whole list to actually find
+where this new node should go but even
+so we've gotten lucky in this appending
+case that we inserted one then two then
+three that's just because of my choice
+of inputs suppose that we don't know in
+advance what the inputs are going to be
+they might be large numbers small
+numbers or anything in between but they
+won't not necessarily be in order but if
+we want to maintain this link list and
+sorted order I think our logic's
+actually going to have to change so let
+me actually go ahead and open up a new
+version of my linked list code this one
+too Main in advance and in this version
+of my code as we'll soon see I've gone H
+about changing the logic just a little
+bit so that I can actually now handle
+this additional case because when
+inserting nodes in arbitrary order if I
+wanted them to end up being sorted I
+have to consider a few possible
+scenarios maybe there's no list
+whatsoever so let's actually look for
+that let me scroll down in this final
+version of my linked list code and
+actually that case here on line 35 is
+pretty much the same if there's no list
+there and the list variable is null well
+let's just update it to point to this
+new node but things get more interesting
+when there is at least one node there
+because if the goal is to maintain
+sorted order we now need to decide does
+this new node whatever its number is go
+before the beginning of the list at the
+end of the list in the middle somewhere
+of the list so let's break that down if
+we find that the new nodes number is
+less than the List's number here well
+then it belongs at the beginning of the
+list because it's smaller than any of
+the numbers already there so what I'm
+going to go ahead and do is update this
+new nodes next field to point at the
+current length list and then I'm going
+to update the link list variable to
+equal the address of this new node the
+effect then is no matter how long the
+existing list is if this new node's
+number is smaller than everything else
+in the list I want to just kind of
+splice it in at the beginning so that's
+actually pretty straightforward with
+just a couple of pointer updates but the
+other scenario is that it doesn't just
+belong at the very beginning of the list
+it's somewhere else in the list and
+that's itself is two scenarios maybe
+it's in the middle of the list maybe
+it's at the very end of the list so
+let's consider those scenarios as well
+let me scroll down here and in my El's
+Clause it's a bit bigger this time why
+because on line 51 in this case I'm
+going to induce another for loop as
+before
+but this time I'm trying to determine if
+this node belongs at the end or
+somewhere in the middle so I'm not just
+looking for the end this time I'm
+actually comparing the value the integer
+inside of this new node against what is
+currently in the list so for instance if
+logically I actually find my way all the
+way to the end of the list whereby the
+next field in the pointer variables node
+equals null well then logically I didn't
+find an earlier spot for this node so
+let me go ahead and update that
+Pointer's next field to equal the
+address of this new node and then like
+before let's just break out because I'm
+done I somehow mathematically got all
+the way to the end of the list because
+there is that null pointer so it must be
+the case logically here that this new
+node belongs at the end but this is the
+juicier slightly more challenging one
+but it's what ensures that we can
+maintain sorted order even if the new
+node belongs somewhere in the middle so
+down here on line 62 I'm going to ask
+this question if the new nodes number is
+less than the number in the next node
+that is to say if my foam finger is
+pointing here but the number I'm trying
+to insert is smaller than the next node
+over there and implicitly the same as or
+greater than the current nodes number
+well then I'm going to go ahead and do
+this I'm going to update the new nodes
+next pointer to be equal to whatever the
+current node I'm pointing at next
+pointer so that I can then update that
+Pointer's next field to equal the the
+new node and then I can break out all
+together doing a similar splice in the
+middle of this list but manipulating a
+node effectively to the left and the
+right to make room for this new node so
+collectively what does this code do well
+if we start out with that initially
+empty list and maybe we insert the
+number two it just goes right there but
+suppose that we insert next the number
+one which of course is smaller this code
+now ensures that the one is going to get
+inserted at the beginning of the list if
+we then insert the number four well
+that's bigger than one and bigger than
+two so it logically is going to end up
+at the end of the list and lastly in
+this example if we insert three which
+again is initially out of order this
+code can ensure that we still insert it
+in sorted order because it's going to
+end up in between nodes two and four so
+here too in terms of running time
+insertion is still Big O of n it's not
+quite as bad in practice as always
+adding it to the end of the list the end
+of the list as was the case when we
+blindly appended new nodes but it is
+going to be in Big O ofen because in the
+worst case here if we've got end nodes
+in the list already then in the worst
+case it might indeed be such a big
+number that it belongs at the end of the
+list all right that was a lot let's go
+ahead and take a delicious cookie break
+here and we'll be back in
+10 all right we are back and to recap
+the problems we've solved and the
+problems we've created our arrays were
+problematic because they were a fixed
+size and that can get us into trouble or
+it causes us to waste more space
+preemptively even though we might not
+ever use it so we introduced link lists
+again to solve that problem by being
+more Dynamic and only allocate as much
+memory as we need on demand step by step
+but of course we're spending extra space
+for the pointers we might gain
+performance if we at least prepend all
+of our elements to it but we lose time
+again if we append or insert in sorted
+order so it it's not clear frankly I
+think to me and even hearing these
+upsides and downsides if there's a clear
+win but maybe there's a way to get the
+best of both World by trying to capture
+the upsides of having information that
+is kept in sorted order that allows us
+to maybe divide and conquer still but
+still gives us the dynamism to grow or
+Shrink the data structure and thus we're
+born trees so what we're about to
+explore are variants of these ideas of
+arrays and Link lists and see if we can
+maybe kind of mash up some of those
+building blocks and create more
+interesting more uh compelling solutions
+that are even not just onedimensional
+sort of left to right but are maybe two
+dimensional and sort of have different
+axes to them or Dimensions so a tree in
+the real world of course tends to grow
+up from the ground like this but it
+tends to Branch out and branches branch
+and that might already in your mind's
+eye evoke Notions of forks in the road
+or conditionals as we've seen and let me
+propose that we first consider what the
+world calls binary search trees and so
+bu is back in that we can do things in
+half and half and half somehow if maybe
+we think about AR raay is a little bit
+more cleverly so here's an array of size
+seven and I chose that deliberately
+because there's a perfect middle there's
+a middle of middle and so forth just
+like the lockers a few weeks back so
+when the world of arrays like this was
+actually pretty efficient because we can
+do binary search and middle of middle
+middle of middle of middle and so forth
+and that gave us logarithmic running
+time but it's only size seven and we
+concluded that it's going to be like Big
+O of n headache to copy this into a
+slightly bigger array free the old
+memory and so forth and thus we're born
+link list but with link list we lost log
+of n running time why because we have to
+always start at the at the beginning to
+get for instance to the middle or to the
+end of the list in the worst case but
+what if we start to think a little more
+cleverly in multiple Dimensions so just
+for the sake of discussion let me
+highlight the middle of this here array
+let me highlight the middle of the
+middle and then the middle of the middle
+of the middle so there's sort of uh
+implicit structure here there's a
+pattern of sorts and in fact just to
+make this more obvious let me not treat
+this in as one dimension left or right
+but how about two and give myself a bit
+of vertical space so it's the exact same
+array but allow me to just think about
+it now as though the middle elements
+weigh up here the middle of the middles
+are slightly lower and the middle of the
+middle of the middles or the leaves
+really are at the bottom of this tree
+and that word deliberate we actually
+borrow vernacular from the world of
+trees where the leaf nodes or leaves are
+the ones at the very bottom and the root
+node is the one at the very top so for
+the sake of discussion computer
+scientists draw trees like this instead
+of like this but it's the exact same
+idea they just tend to grow down in uh
+in discussions more like a family tree
+if you drew those growing up for
+instance so what's interesting here well
+at the moment we've sort of broken the
+array model because this memory is
+absolutely not contiguous because this
+number is here this numbers here here
+here and here it's all over the place
+but we do have pointers now in our
+toolkit whereby even if these numbers
+are anywhere in the computer's memory we
+can kind of stitch them together like we
+did string and those balloons now it's
+not sufficient just to have have one
+piece of string for each node or one
+pointer but what if we actually give
+each of these nodes not just a number
+like the number four the number two the
+number six let's give them each a number
+and two pointers a so-called left child
+and a right child so to speak uh so we
+could do this and I'm going to abstract
+away now technically there's are like
+they're not even rectangles anymore like
+they're really long rectangles or
+they're like sort of upside down T's
+that have three boxes to them but I'm
+just going to abstract away nodes now as
+just simple squares and it's an
+impementation detail as to what the strs
+actually are but the arrows suggest that
+each of these nodes now has two pointers
+you don't have to use them the leaf
+nodes have nothing to point to so those
+can all be null probably but each of
+these nodes now has two pointers now
+what's the implication of this this here
+is what we call a binary search tree
+because one and first and foremost it's
+obviously a tree but it also is a data
+structure that's kept in sorted order
+whereby notice what is true if you pick
+any node in this tree like the number
+four everything to the left of it its
+left sub tree so to speak is smaller
+everything to the right of it its right
+sub tree is larger and that's true
+elsewhere look at the six everything to
+the left is smaller everything to the
+right is bigger and same thing over here
+so in some sense this is a recursive
+data structure because you can say the
+same thing about each of these nodes
+because each of these sub trees compose
+a larger tree or conversely this big
+tree is a composition of one two sub
+trees plus one more node so think back
+to our Mario example in those bricks
+well what's a pyramid of height four
+well it's just a pyramid of height three
+plus one more row what's a tree of
+height three well it's two subt trees of
+height two plus one more row or really
+one new root node to connect them so
+this already is sort of a recursive data
+structure by that logic how do we
+translate this into code well we won't
+sludge through so much low-l C code this
+time around but let me propose that we
+could Implement a node now as being
+similar in spirit to what we did last
+time where every node used to have a
+number and a next pointer but now let's
+actually make some room for ourselves
+and redefine a node is still having a
+number but now having two no uh two
+pointers and I'll call them obviously
+left and right though we could call them
+anything we want I could call it next
+and previous but really left and right
+would seem to make more sense with
+Children of a given node like this so
+This in C is how we might Implement
+therefore a node in a binary search tree
+and so let's consider pictorially what
+the running time is of searching for
+something if this here is the tree and
+it follows that binary search tree
+definition where everything to the left
+is smaller everything to the right is
+bigger well how many steps might it take
+if you have n nodes in a tree like this
+well it's not going to take me end steps
+because I certainly don't have to look
+through every node and in fact just like
+a link list starts on the left hand side
+so to speak though that's just an artist
+rendition just as a link list starts on
+one end and you have to Traverse the
+whole thing a tree because it's
+two-dimensional always starts in memory
+at the root node so this is always where
+you start any operation insertion
+deletion searching so by that logic in
+the worst case if there's n nodes here
+how many steps would it seem to take
+it's not Big O of n but so it's actually
+back to Big O of log n why because
+actually if you kind of think of the
+height there's roughly eight nodes in
+here and log base 2 of 8 is actually
+three and so one two three is the height
+of this tree so in the worst case at the
+moment it seems that it's only going to
+take me like one node two nodes three
+nodes or really just two steps to get to
+the very bottom of this tree to decide
+is a number there or not I certainly can
+ignore like this entire subtree why
+because I'm I'm searching for the number
+seven just like the phone book from week
+zero I can kind of divide and conquer
+this problem if I'm looking for seven I
+don't need to bother wasting any time
+looking at this entire subtree which is
+almost 50% of the picture on the screen
+and so I can focus on this half then
+this half and boom I'm done so we sort
+of have binary search back we have the
+the metaphor of the lockers back by
+operating now in two Dimensions to
+mitigate the reality that our memory is
+no longer contiguous but that's fine we
+can follow these arrows we can use these
+pointers instead to get anywhere that we
+actually want so any questions now on
+trees or specifically binary search
+trees which I dare say are sort of like
+the Best of Both Worlds all of the
+upsides of an array and it's like log in
+running time and all of the upsides of
+the dynamism of Link list because this
+thing can grow and shrink and doesn't
+need to be
+contiguous any questions on
+this all right well the code two lends
+itself to relative Simplicity and here's
+where recursion applies not just to the
+structure of the data but also the code
+itself so just for the sake of
+discussion we won't run this kind of
+code we'll just look at it on screen
+here suppose you're implementing a
+function called search whose purpose in
+life is to search a tree and return true
+or false I found the number you're
+looking for well here's the number I'm
+looking for it's one of the arguments
+and the first argument more importantly
+is actually a pointer to the tree itself
+a pointer to the root of the tree and
+that's all the information we need to
+search a tree and go left go right go
+left go right how well let me do this as
+always we have a base case when it comes
+to recursion because if there's no tree
+there then it makes no sense to even ask
+me this question I'm just going to
+return false if you hand me null there's
+nothing to do return false but suppose
+that you don't hand me null and suppose
+that the number I'm looking for is less
+than the number in the tree at the
+moment the number at that root well what
+do I want to do I effectively want to go
+left I want to search the left sub tree
+how do I do that I'm going to return the
+recursive uh return value from the same
+search function passing in a slightly
+smaller tree a so-called sub tree but
+the same number and this is where
+recursion is kind of beautiful like look
+at the relative Simplicity of this if
+search exists which it doesn't exist in
+its entirety yet but we'll get there if
+you want to search half of the tree just
+go there so go to the root of the tree
+follow the left child pointer and pass
+that in because it's a tree it's just a
+smaller tree but passing the same number
+what if though it's a bigger number so
+what if the number you're looking for is
+bigger than the number at the root of
+the tree well then just search the right
+sube instead and now logically what's
+the fourth and final
+case if it's equal so I can express that
+as if the number you're looking for
+equal equals the number in the tree that
+is the root of the tree then I'm going
+to go ahead and return true and you
+might remember from our days with
+scratch like even this conditional is
+not necessary I just did it to be
+explicit we can tighten that up as just
+an else instead and that's it and this
+is where again recursion finely is maybe
+a little more accessible a little more
+obvious in its cleanliness there's
+relatively little logic here but what's
+important is that these recursive calls
+here and here are dividing and
+conquering the problem implicitly why
+because it's solving the same problem
+search for a number but it's doing it on
+just half of the tree or the other half
+of the tree and because we have this
+base case here even if you get all the
+way to the bottom of the tree and you
+try to go down the left child or you try
+to go down the right child but those
+pointers are null then you know you
+didn't find it because you would have
+returned true sooner if anything had
+been in fact equal so that then is
+recursive code for searching a binary
+search tree which is again just to
+connect the dots of what we introduced
+last time of actually doing things now
+recur verely and revisiting some of our
+own weak zero problems but I'm kind of
+lying to you here like yes this is a
+binary search tree but it's not always
+as pretty as this it's certainly not
+always Seven Elements but it doesn't
+actually have to be as well balanced as
+this one here is in fact suppose that we
+insert the following numbers into an
+empty list starting with two I can plop
+the two right there that's the current
+root of this tree suppose though that I
+insert next uh the number how about one
+well it stands for reason that it should
+go now to the left and so now this is
+the tree of size two uh now I insert the
+number say three it of course can go
+there so that makes perfect sense and I
+just kind of got lucky because I
+inserted these numbers as two then one
+then three I very cleanly got a balanced
+tree that sort of you know weighted
+properly left and right but what if you
+have a more perverse set of inputs so to
+speak you're not lucky and like the
+worst possible situation happens in
+terms of the order in which the human is
+inputting data into this data structure
+what if the human inserts first okay
+well it goes as the root of the tree but
+here's where things get start to devolve
+what if the human then inserts two okay
+it goes there what if the human then
+inserts three well according to our
+definition it goes there it looks like
+part of a tree because of how I've drawn
+it but what is it
+really if you kind of tilt your head
+right it looks really just like a length
+list and there really is no second
+dimension I've drawn it this way but
+this for all intents and purposes is a
+link list of size three why cuz because
+there's no having there's no actual um
+choosing left or right now this is
+fixable how could you fix this it's
+still the same numbers 1 2 3 and it does
+uh adhere to the binary search tree
+definition every number to the right is
+greater every number to the right is
+greater every number to the left is well
+it's inapplicable but it certainly
+doesn't violate that definition could
+you kind of fix this tree somehow and
+make it balanced so it's not devolving
+into Big O of n but is still technically
+log of
+n what should be the
+root so I could reverse the pointer from
+one to two yeah and so sort of
+pictorially if I kind of take this and I
+just kind of like swing everything over
+and make two the new root then indeed
+this could be the new route up here one
+could be hanging off of it over here and
+three can be hanging off of the two as
+is so long story short when it comes to
+binary search trees by themselves they
+don't necessarily guarantee any sort of
+balance so even though theoretically yes
+it's Big O of log in which is fantastic
+not if you get a perverse set of inputs
+that just happen to be for instance the
+worst possible scenario now it is
+fixable and in fact in higher level
+courses in computer science specifically
+on algorithms and data structures you'll
+be introduced if you go down that road
+of how you can tweak the code for
+insertion and deletion in a binary
+search tree to kind of make these fixes
+along the way and it's going to cost you
+a few more steps to kind of fix things
+when they get out of whack but if you do
+it every insertion or every deletion at
+least you can maintain a balanced tree
+and you'll learn about different types
+of balanced trees but for our purposes
+now we don't necessarily get that
+property even if we do want log n unless
+you keep it balanced along the way now
+what about other combinations of arrays
+and Link list like we can really start
+to mash these things up and see what
+comes out of them dictionaries are
+another abstract data type similar in
+spirit to stacks and cues and that you
+can Implement them in different ways a
+dictionary is a data structure that
+stores keys and values and those are
+technical terms keys and values the
+analog in the human world uh would be
+like literally a dictionary that you'd
+have in a classroom like a dictionary
+with words and definitions more
+generally known as keys and values so
+that's all a dictionary it is it
+Associates keys with values so for
+instance you could think of it almost as
+like two columns in a spreadsheet where
+on the left you put the key on the right
+you put the value or specifically you
+put the word in a dictionary and the
+definition there after and that's
+roughly how the pages on the printed
+pages in a dictionary are laid out so
+dictionaries associate words with
+definitions or more generally keys with
+values but it's an abstract data type
+and that we could implement this in a
+bunch of ways we could use maybe two
+arrays one array for the keys one array
+for the definitions and you just kind of
+hope that they line up bracket I and
+this one is the maps to bracket I and
+this one but an array is not going to
+give us the dynamism that we want right
+you might run out of space when Mariam
+Webster or whoever comes up with adds
+new words to the English language you
+might not want to be using an array you
+might want to use a linked list but
+again linked list kind of then devolve
+into Big O of N and that's not good for
+dictionaries and spell cheing if you
+have to check every possible word to
+find something you know getting
+something that's a little faster than
+that is compelling so let's consider how
+maybe Apple maybe Google maybe others
+are actually implementing contacts
+because even though I implied in week
+zero and maybe outright said it's an
+array it's a big uh list of all of your
+names of contacts maybe of some fixed
+size they probably better be using some
+am some variant of a linked list
+otherwise you could never add more
+friends potentially you'd max out and
+they'd say you have to unfriend someone
+just to fit it as an aside this is sort
+of true in the social media world like
+once you have like 5,000 friends on
+Facebook you can't have 5,000 in one
+once you have some number on LinkedIn
+you can't have more connections that's
+not necessarily that they're using
+arrays but it is the same implication
+that they've chosen some finite size for
+memory so how might we consider
+implementing a dictionary specifically
+for your address book or your contexts
+so you can store the names of everyone
+ideally alphabetically but also their
+phone numbers and maybe anything else
+well ultimately we want to be able to
+get at someone's name and lead to their
+number so the keys and values for our
+discussion here will be names are the
+keys and phone numbers are the values
+but the values themselves could also
+include email address and mailing
+address and all of that but we'll keep
+it simple names and phone number so
+here's how you might think about this or
+Draw it on a chalkboard two columns or
+in a spreadsheet left and right but how
+could we actually implement this in
+memory because ideally we don't want it
+to devolve into something linear like we
+don't have to look through all of my
+friends and family and colleagues to
+find someone whose name starts with z
+for instance or anything else um it
+would be nice to have something
+logarithmic with binary search but with
+binary search again we have to maybe I
+maybe use a tree instead but now we have
+to use two pointers instead of one like
+there's a lot of trade-offs here but
+let's let see how else we could solve
+this same problem because wouldn't it be
+nice and we've not really talked about
+this before if we instead aspired to
+this sort of Holy Grail of algorithms
+like the best algorithm out there is
+surely one that's Big O of one like
+constant time because what that means is
+that it doesn't matter if you have one
+friend 10 friends a 100 a thousand a
+million a billion friends doesn't matter
+how big n is your searches will always
+take you the same amount of time it is
+independent of N and that's why it's
+sort of uh the ultimate goal for
+performance so can we get to this this
+aspiration well a couple of building
+blocks there's this notion in Computing
+known as hashing and hashing is a
+technique literally a function in math
+or in code that actually takes any
+number of inputs and Maps them to a
+finite number of outputs so if you think
+back to like uh high school math domains
+and ranges you can take an infinite
+domain with any values in the world but
+it reduces them a hash function to a
+finite range of specific values so for
+instance it's no accident that we have
+these four buckets on the stage now Each
+of which has a a suit from a deck of
+cards uh we got for visibility sake the
+biggest cards we can uh these are the
+super jumbo playing cards and in this
+box are a bunch of randomly ordered
+playing cards and typically if you were
+to ever like play some game or you
+wanted to sort these for some reason how
+would you go about sorting them by suit
+and also by number you know odds are if
+you're like me you'd probably kind of
+take some shortcuts and maybe pull out
+all of the hearts pull out all of the
+the Spades pull let all of the clubs or
+you kind of bucke tize it into
+categories and that term is actually
+technical here are four buckets to make
+this clear and for instance if the first
+card I find is like the five of Hearts
+you know what just to kind of make my
+life easier I'm going to put that into
+the hearts bucket or here we have four
+here we have five here we have six here
+we have Queen and notice that I'm
+putting these cards into the appropriate
+buckets why because ultimately then I'm
+going to have four problems but of
+smaller size of 13 size problem 13 13 13
+and frankly it's just going to be easier
+cognitively dare say algorithmically to
+then sort each of the 13 cards in these
+buckets rather than deal with like four
+suits somehow combined all together so
+if you've ever in life made piles if
+you've ever literally used buckets like
+this you are hashing I'm taking some
+number of inputs 52 in this case and I'm
+mapping it to a finite number of outputs
+four in this case so hashing again just
+takes in inputs and hashes them to
+Output values in this way so beyond that
+terminology let's consider what we can
+now do with hash functions that's a
+little more germine to storing things
+like our friends and family and
+colleagues in in uh dictionaries a hash
+function is just one that does that I as
+the human was just implementing or
+behaving like a hash function but
+technically a hash function is actually
+a math function or a function in C or
+scratch or soon python or other
+languages that takes as input some value
+be it a physical card or a name or a
+number or something something else and
+output some value and we can use hashing
+as an operation to implement what we'll
+call Hash tables and that's kind of what
+that dictionary was if you think about
+how I drew it on the screen as two
+columns it's like a table of information
+keys on the left values on the right so
+what is a hash table the simplest way to
+think about it is that this is an
+amalgam of a combination of arrays and
+length lists right we kind of borrowed
+some ideas of length lists a moment ago
+to give us trees in two Dimensions what
+if we stick with this idea of having
+twodimensional world but now use an
+array initially so we get the speed
+benefits of it arrays because
+everything's contiguous we can do simple
+arithmetic and jump to the middle or the
+middle the middle or the first or the
+last very easily and then you know what
+let's kind of use the horizontal part of
+the screen to give us link lists as
+needed so for instance if the goal at
+hand is to implement the contacts in my
+cell phone or my Mac or PC let me
+propose that we start at least in
+English with an array of size 26 of
+course it's zero index so it's really
+location 0 through 25 and for the sake
+of discussion let me propose that
+location Z represents a location 25
+represents Z and then everything else in
+between why we know from C that we can
+convert thanks to ASI and unicode from
+letters to numbers and back and forth so
+in constant time we can find location a
+in constant time we can find location Z
+why because we're using an array just
+like in week two all right well suppose
+that I want to think about these more as
+letters of the alphabet the English
+alphabet rather than numbers so it's
+equivalent to label them A through Z and
+suppose now I want to start adding
+friends and family and contacts to my
+address book How might this look well if
+the first one I want to add is Mario
+Mario's name starts with an m and so
+that's you know a b c d e f g okay M
+goes there so I'm going to put Mario at
+that location in the in the array after
+that I add a second person for instance
+how about Luigi well L comes just before
+M so it stands reason that it goes there
+in the array meanwhile if I go and add
+another character like Peach she's going
+to go there a few spots away because her
+name starts with p meanwhile here's a
+whole bunch of other Nintendo characters
+that happen to have unique uh letters of
+their first names and there's room for
+everyone room for everyone on the board
+A through Z with some blanks in the
+middle but you can perhaps see where
+this is going when and where might a
+problem arise with this array based
+approach yeah so when we add someone
+else whose name collides with one of
+these existing characters just because
+by accident they have a name that starts
+with the same letter so for instance
+there's lyu here which who collides with
+Luigi potentially here's link who
+collides with both of them but I've
+drawn a solution to this along the way I
+could if I was cronian just remove Luigi
+from the data structure and put lyu in
+or remove and then put Link in there
+instead but that's kind of stupid if you
+can only have like one friend whose name
+starts with L like that's just bad
+design but what if we now in the off
+chance I have two friends whose names
+start with the same letter well I'll
+just kind of string them together link
+them together no pun intended using
+pointers of sorts so my vertical here is
+in Array and this is just narst
+rendition there's no actual notion of up
+down left right in the computer's memory
+but this is my array always of size 26
+and each of the elements in this array
+are now not a simple number but it's a
+pointer to a linked list and if there's
+nothing there it's just null null null
+null but otherwise it's a valid address
+that points to the first node and you
+know what if we have multiple names with
+the same letters we can just string
+these nodes together together using
+pointers as well so a hash table then as
+implemented here is an array of linked
+lists and that allows us to one get some
+speed benefit because look how fast we
+inserted or found Mario Luigi and Peach
+but it still covers the scenario where
+okay some people can have the same same
+first letter some of these names will
+collide so collisions are an expected
+problem with a hash table whereby two
+values uh from some domain happen to map
+to the same value and frankly you'll see
+this here too so these buckets are
+technically a finite size they're
+definitely big enough for 13 cards each
+but you could imagine a world where if
+I'm using two decks three decks or four
+decks I'm going to run out of space and
+then my data structure can't fit any
+more information but we're not going to
+have this problem here because link
+lists as we've seen can grow and even
+shrink as much as they want in the world
+of Nintendo there's actually lots of
+collisions and these aren't even all of
+the characters so that's then a hash
+table so with a hash table in mind how
+fast is it did we achieve that Holy
+Grail of like constant time well for
+some of these names if I back up yeah
+it's kind of constant time like Yoshi
+and Zelda boom constant time location 24
+location 25 some of them though like
+Luigi link H it's not quite constant
+time cuz I first have to get to Luigi's
+location and then I have to follow this
+link list so technically then what's the
+running time of searching a
+hashtable sometimes you'll get lucky but
+sometimes you
+won't consider the worst case Big O is
+often used to describe worst case so
+what would be the worst case in your own
+context little letter so n why
+because correct and so to summarize like
+in know some weird scenario like all of
+your friends and family in contact could
+have names that start with the same
+letter and then it doesn't matter that
+this is a hash table with an array of
+Link lists for all intents and purposes
+if your friends's names only start with
+the same letter all you have is a linked
+list much like with a tree if you don't
+keep it balanced all you have really is
+a linked list so technically speaking
+yes hashtables are Big O of n even
+though even if you're good about um even
+if you have friend uh in the worst case
+hash tables are Big O of n why because
+it can devolve into this perverse
+scenario where you just have lots and
+lots of collisions all at the same
+values but you know there's got to be a
+way to fix this right like how could we
+chip away at the length of these chains
+so to speak could I decrease the length
+of these link lists so that with much
+higher probability there's no collisions
+well maybe this problem is that I
+started with just 26 buckets I mean four
+buckets here 26 here maybe the problem
+is the size of my array so what if I
+instead just give myself a bigger array
+and it's too big to fit on the screen
+but what if I in have a bucket for names
+that start with L AA and L A B and L a c
+l a d dot dot dot all the way down now
+when I hash these names into my uh into
+my hash table locky 2 is going to end up
+at their own location here Link at their
+own location here Luigi at their own
+location here and so now I don't have
+link lists I really just have a an array
+of names so now I'm actually back to
+constant time why because so long as
+every letter of the alphabet has an asky
+value I can get that in constant time
+and we did that as far back as week one
+and so I can figure out what the
+arithmetic location is of each of these
+buckets just by looking at one two three
+characters or the total uh number of
+letters that I care about which is just
+three in this case so this feels like a
+solution even though I haven't drawn all
+the names it feels like we've solved the
+problem
+but what's the downside or tradeoff of
+what we've just
+done sorry memory memory so not pick
+here is the dot dot dot and everything
+above and everything below this just
+exploded in terms of the number of
+locations in this array why because if
+I'm taking into account not just the
+first letter but the first the second
+and third that's 26 to the3 power 26 *
+26 * 26 and even though there's going to
+be a crazy number of names that just
+don't exist I can't think of a Nintendo
+character whose name starts with laa you
+still need that bucket why because
+otherwise you don't have con ousness you
+can't just arbitrarily label these
+buckets if you want to be able to use a
+function that looks at first second
+third letter and then arithmetically
+figures out where to go whether it's 0
+to 25 or 0 to 26 the 3 power minus 1
+being the number of buckets there so
+there's a trade-off there you're wasting
+a huge amount of memory just to give
+yourself that time but that would then
+give us constant time so in that sense
+if we have an ideal hash function
+whereby the function ensures that no
+values slide we do actually obtain that
+Holy Grail of Big O of one because it
+only takes one or maybe three steps to
+find that name's location now to make
+this clear how do we translate this to
+something like code well here again is
+the struct we used last time for that of
+a person and a person had a name and a
+number here for a hash table we might do
+something a little bit differently we
+might now have a node in a hash table
+storing the person's name person's phone
+number and a pointer to the next such
+person in that chain if needed uh
+hopefully this is going to be null most
+of the time all of the time but we need
+it just in case we do have that
+Collision we've seen in our pictures the
+names like Mario Luigi and so forth we
+didn't see the numbers but that's what's
+inside of those boxes on the picture but
+that kind of node would give us what we
+need to build up these link lists
+meanwhile what is the hash table itself
+that vertical strip along the left well
+it's really just a variable we could
+call it table for short of size 26 and
+each of the locations in that array that
+was on the side here at least in the
+simple small version was a pointer to a
+node so it's null if there's no no one
+there or it's a valid address of the
+first node in the linked list so this
+then is a hash table and each of those
+nodes to be clear would be defined as
+follows so what's the takeaway then with
+a hash table ideally with a good hash
+function and with a good set of inputs
+where you're not presented with some
+perverse set of inputs that's like all
+of the friends whose names start with
+the same letter ideally what the hash
+function will be doing for you is this
+the input is going to be someone's name
+the algorithm in the middle is going to
+be the hash function and the output is
+the so-called hash value or location in
+this case so for instance in the case of
+Mario when we had just uh when we had
+just 26 buckets total the input to the
+hash function would be Mario that hash
+function would really just look at the
+first letter M in that case and would
+ideally output the number 12 I did the
+same thing but in my head whenever I
+pulled out a card like the five of
+diamonds here I figured out okay that's
+location Zer out of my 0 1 2 3 or four
+total buckets here we're doing it
+instead alphabetically and so someone
+like Luigi meanwhile would have a hash
+value of 11 these numbers would be
+bigger of course though if we're looking
+at 1 2 three letters instead of just one
+so with that said if we were to
+implement this in actual code a hash
+function I did it sort of um physically
+by acting out the cards here is how we
+might implement this inode code using C
+I could have a function called hash
+whose argument is a string akr star the
+name of which is word where the word is
+like the first name first word in their
+name we want this function to return an
+INT which ideally in this case of 26
+buckets would be a number from Zer to 26
+and how do we achieve that well if we
+use our old friend C type which had a
+function like two Upper from a couple of
+weeks back we could pass in the first
+letter of that word capitalize it which
+is going to give us a number that's 65
+66 67 on up for the 26 English letters
+and if I subtract 65 AKA quote unquote a
+single quotes CU it's a Char that's
+going to mathematically give me a number
+between 0 and 25 inclusive there's a
+potential bug if I pass in punctuation
+or anything that's not alphabetical like
+bad things will happen so I should
+probably have some more error checking
+but this is the simplest way in code
+that I could Implement a hash function
+that looks only at the first letter of
+their name probably not ideal cuz I can
+think of friends in the real world who
+have the same first letter of their name
+whether this is better or worse than
+looking at two letters three letters
+four letters it's going to depend on how
+much memory you want to spend and how
+much time you want to ultimately save
+let me tweak this though a little bit
+it's conventional in C just so you know
+that if you're passing in a string that
+is a Char star to a function and you
+have no intention of letting that
+function change the string you should
+probably declare the argument to the
+function as const and that will tell the
+compiler so please don't let the human
+programmer actually change that actual
+word in this function it's just not
+their place to do so and we can actually
+do something else in a hash function
+because you're using in this case the
+output the integer as a location in an
+array it had better not be negative
+right you want it to be zero or positive
+and so technically if you want to impose
+that in code you can specify that the
+int that's being returned has to be
+unsigned that is it's zero on up through
+the positive numbers it is not a
+negative value so this is slightly
+better than the previous version where
+we didn't have these defenses in place
+all right so what does this actually
+mean in practice you don't get to
+necessarily pick the hash function based
+on the names of your friends right
+presumably Apple and Google and others
+already chose their hash function
+independent of what your friend's names
+are so ideally they want to pick a hash
+function that generally is quite fast
+Big O of one but practically speaking in
+a hash table and unless you get really
+lucky with the inputs uh which you
+generally won't really it's Big O of end
+running time why because in the worst
+possible scenario you might have one
+long length list but in practice ideally
+and this is a little naive but suppose
+that you have a uniform distribution of
+friends in the world where one3 126 of
+them have let names starting with a and
+then another 126 out of B and then do do
+doz that would be a nice uniform
+distribution of friends technically then
+you're running time of a hash table for
+searching it or deleting or inserting
+would technically be Big O of n divided
+by K where K is the number of buckets a
+constant so it's technically Big O of n
+divided by 26 now again per our
+discussion of Big O notation that's
+still the same thing right you get rid
+of constant factors so yes it's 26 times
+faster the chains are 20 126 the length
+but ASM totically in terms of Big O
+notation it's still Big O of N and
+here's where now we can start to Veer
+away from like what is theoretic right
+versus what is practically right in
+reality in the real world if you work
+for Google Microsoft Apple and others 26
+times faster is actually faster in the
+real world even though a mathematician
+might say Ah that's really the same
+thing but it's not like the real world
+wall clock time if you watch the number
+of seconds passing on the clock N overk
+is a much better running time than Big O
+of n so here too we're getting to the
+point where the conversations need to
+become a little more sophisticated um
+it's not quite as simple as Theory
+versus practice it depends on what
+matters ultimately to you but ideally
+and literally if somehow or other they
+picked an ideal hash function Big O of
+one would really be the ideal here would
+really be the running time we achieve
+and what you'll generally find in the
+real world is that you don't use hash
+functions that are as simplistic as just
+look at the first letter and honestly
+they won't generally look at the first
+and the second and the third letter
+they'll use some even fancier math to
+put real downward pressure on the
+probability of collisions so that yes
+they will still happen but most of the
+time a really good hash function even if
+it's not quite ideal will be darn close
+to constant time which makes hash tables
+and in turn dictionaries one of the most
+universally compelling data structures
+to use now with that said we have time
+for just another data structure or so
+and this is not a typo this one's called
+a try and a try is short for retrieval
+which is weird because you say retrieval
+but you say try but that's the etymology
+of try and a try is sort of the weirdest
+amalgamation of all of these things
+whereby a try is a tree of arrays so a
+hash table is an array of Link lists a
+try is a tree of arrays so at some point
+computer scientists just started like
+mashing together all of these different
+inputs and let's see what comes out of
+it but a try is actually really
+interesting and what you're about to see
+is a data structure that is literally
+Big O of one time constant time but
+there is a downside so in a try every
+node is an array and every location in
+that array generally represents a letter
+of the alphabet you could generalize
+this away from words too but a try in
+this case if we have a root node that
+root node is technically a big array
+with 26 locations and if you want to
+insert names or words more generally
+into a try what you do is this you hash
+again and again and again creating one
+array for every letter in your word so
+what do I mean by that if we've got 26
+elements here uh this would be
+representing a this would be
+representing Z and initially these are
+all null by default when you have just
+this rout but suppose I want to insert a
+few friends of mine including toad for
+instance to o a d is the name so how
+would I do that I would first find the
+location for T based on its number 0
+through 25 and if this is T what I would
+I then do I would change the null to
+actually be a pointer to another node
+AKA another array and then I would go
+into the second array and hash on the
+second letter of Toad's name which is of
+course o and then I would set a pointer
+to a third node in my tree which we be
+represented here so another 26 uh
+pointers then I would find the pointer
+representing a and I would create
+finally a fourth node another array
+representing the fourth letter of Toad's
+name but because Toad's name ends with d
+and therefore I already have four noes
+here we need to specially color um
+though we could probably use an actual
+uh variable here I need to somehow
+indicate that Toad's name stops here so
+it's not null per se this actually means
+that toad is in this data structure but
+I did this deliberately because another
+friend of mine might be Toadette in the
+Nintendo World and Toadette of course is
+a super string of toad that is it's
+longer but it shares a common prefix so
+Toadette could continue and I could have
+another node for the E another node for
+the T another node for the second T and
+another for the last e but I somehow
+have to sort of Mark that e is the end
+of her name as well so even though they
+share a common prefix the fact that
+there's two green boxes on the screen
+means that to a d is in this dictionary
+as a key as is to a d tte is another key
+and technically speaking what's in these
+boxes too it's not just a pointer it's
+probably Toad and toadette's phone
+number and email address and like the
+actual value of the dictionary which is
+to say this two is in fact a dictionary
+a dictionary is just an abstract data
+type a collection of key value pairs
+just like I claimed a stack and a Q was
+and how you implement it can differ you
+could implement it with a hashtable an
+array of Link lists as we just did or
+you can Implement a dictionary as a try
+a tree of arrays and let me add one more
+name to the mix um Tom for instance a
+valid name from the universe t m just
+means that okay that name exists in this
+structure as well now what is the
+implication
+of storing the names in this way which
+is sort of implicitly like I'm
+effectively storing Toad and Toadette
+and Tom in this uh data structure
+without actually storing t or o or a or
+D or any of the other letters I'm just
+implicitly storing those letters by
+actually using valid pointers that lead
+to another node and so what's the
+implication of this en code well in code
+it might look like this every node in a
+try is now redefined as being in Array
+of size 26 and I'll call it children
+just to borrow the family tree metaphor
+and that in each of these nodes there is
+room for the person's phone number for
+instance AKA a string or Char star so
+what does this mean well if there's
+actually a non-null number there that's
+equivalent to there being a green box
+like if you actually see plus one 617
+Das whatever there that means there's a
+green box because Toad's number is right
+here or toadette's number is down here
+or Tom's is over there but if this is
+null that just means that maybe is the T
+or the o or the E which are not actually
+ends of people's names so that's all
+these nodes actually are and if we think
+back now to what this data structure
+looks like this is in fact a data
+structure that can be navigated in
+constant time why well all we need to
+keep track of this data structure is
+literally one pointer called try that's
+a pointer to the first of these nodes
+the so-called root of the try and when
+it comes to now thinking about the
+running time of a try well what is is it
+well if you've got n friends in your
+contacts already or if there's n keys in
+that data structure how many steps does
+it take to find anyone well whether I
+have three names toad Toadette or Tom or
+three million names in that data
+structure how many steps will it take me
+to find toad ever t o a d how many steps
+for toad at t o a d e t t e eight steps
+how about for Tom 1 two three and
+frankly I'm sure if we looked it up
+there's probably a limit on the number
+of characters in a Nintendo character's
+name maybe it's 20 characters total or
+maybe a little longer 30 there's some
+fixed value it's not unbounded there's
+not an infinite number of letters in any
+Nintendo character's name so there's
+some constant value call it K so no
+matter whose name you're looking for
+it's going to take you maximally K steps
+but K is a constant and we ever always
+said that Big O of K is the same thing
+as Big O of one so for all intents and
+purposes even though we're taking a bit
+of Liberty here searching a try
+inserting into a try deleting from a try
+is constant time because if you have a
+million a billion names in the
+dictionary already it's going to take up
+a huge amount of space but it does not
+affect how many steps it takes to find
+toad or Toadette or Tom that depends
+only on the length of their names which
+effectively is a constant value but
+there is a downside here and it's kind
+of a big one in practice I dare say most
+computers most systems would actually
+use the hash tables not tries to
+implement dictionaries collections of
+key value pairs what's the downside of
+this here data structure might you think
+and this is just representative picture
+for toad Tom and
+Toadette all the space it takes up I
+mean even for these three names look at
+how many empty pointers there are so
+they're null to be sure but there's like
+25 unused spaces here another 25 unused
+spaces here 24 unused spaces here and
+what's not pictured is if I've got more
+and more names this thing's just going
+to blow up with more and more and more
+and more arrays even though there's not
+going to be someone whose name starts
+with like L AA or LBA or lbb there's
+going to be so many combinations of
+letters where it's just going to be null
+pointers instead so it takes up a huge
+amount of space but it does give us
+constant time and that then is this here
+tradeoff so I would encourage you here
+on out as we exit the world of c and so
+much of today's code in the past several
+weeks code will soon be reduced in a
+week's time to just one line of code two
+lines of code because Python and the
+authors of python will have implemented
+all of this week's and last week's and
+prior week's ideas for us we'll be able
+to operate at a higher level of
+abstraction and just think about what
+problems we want to solve and how we
+want to do so algorithmically and with
+data structures and data structures in
+conclusion are everywhere has anyone
+recognized this spot in Harvard
+Square anyone what are we looking
+at so this is sweet green a popular
+salad place and this is actually a
+dictionary or really a hash table of
+sorts why well if you buy a very
+expensive salad at Sweet green and they
+put it on the shelf for you if you've
+ordered via the app or online in advance
+and if I for instance were to order a
+salad it would probably go under the D
+heading if Carter were to order a salad
+it would go under C ulia under y and so
+they hash the salads based on your first
+name to a particular location on the
+Shelf why is that a good thing well if
+it were just one long shelf that wasn't
+even alphabetical it would be Big O of n
+for me to find my Sal and for Carter and
+Julia to find theirs because they've got
+26 letters here it's Big O of one it's
+one step for any of us to find our
+solids except again in perverse
+situations where to might this system
+devolve at like 12:30 p.m. in the
+afternoon for instance what could go
+wrong a lot of people with names the
+same first letter order yeah a lot of
+people with the same first uh letters of
+their names might order a salad so
+there's a lots of like d d d d where do
+we put the next person okay well maybe
+we overflow to e what if there's a lot
+of e people it overflows to F what if it
+overflows then we go to G and it sort of
+devolves anyway into a linked list or
+really multiple arrays that you have to
+search in Big O of end time uh I've even
+been to Sweet green at non-popular times
+and sometimes the staff just don't even
+choose to use the dictionaries they just
+put it like what's closest to them so
+you have to search the same thing
+anywhere but you'll start to see now
+that you've seen some of these building
+blocks that like data structures are
+everywhere algorithms are everywhere and
+among the goals of cs50 now are to
+harness these ideas most efficiently so
+that's a wrap we'll see you next
+[Music]
+[Music]
+[Music]
+time
