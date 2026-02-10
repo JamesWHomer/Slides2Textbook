@@ -1,9 +1,11 @@
 # Handles OpenAI api calls.
+from dataclasses import dataclass
 import os
 from typing import Optional, Type
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from openai.types.responses import Response, ResponseUsage
 from pydantic import BaseModel
 
 load_dotenv()
@@ -13,59 +15,42 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
 
-def generate(system: str, prompt: str, model: str ="gpt-5", effort: str ="medium", structured_output: Optional[Type[BaseModel]] = None):
-    messages = [
-        {
-            "role": "developer",
-            "content": [
-                {
-                    "type": "input_text",
-                    "text": system
-                }
-            ]
-        },
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "input_text",
-                    "text": prompt
-                }
-            ]
-        }
-    ]
+def generate(developer: str, user: str, model: str = "gpt-5.2", effort: str = None) -> Response:
+    """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
 
-    base_args = {
-        "model": model,
-        "input": messages,
-        "reasoning": {
-            "effort": effort,
-            # "summary": "auto"
-        },
-        "tools": [],
-        "store": True,
-        "include": [
-            "reasoning.encrypted_content",
-            "web_search_call.action.sources"
-        ]
-    }
+    Args:
+        developer: Developer message also known as System Prompt. Instructions that the LLM follows closely.
+        user: User prompt which in our usecase includes context that the LLM can use to generate text. Used less for instruction following than developer.
+        model: The model string used by the API for text generation.
+        effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
 
-    if structured_output is not None:
-        if not issubclass(structured_output, BaseModel):
-            raise TypeError("structured_output must be a Pydantic BaseModel subclass.")
-        response = client.responses.parse(
-            text_format=structured_output,
-            **base_args
-        )
-        return response.usage.input_tokens, response.usage.output_tokens, response.output_parsed
-
-    response = client.responses.create(
-        text={
-            "format": {
-                "type": "text"
-            },
-            "verbosity": "high"
-        },
-        **base_args
+    Returns:
+        The complete, completed output of the API call. 
+    """
+    return client.responses.create(
+        model=model,
+        reasoning={"effort": effort},
+        instructions=developer,
+        input=user,
     )
-    return response.usage.input_tokens, response.usage.output_tokens, response.output_text
+
+@dataclass
+class TokenCount:
+    input_tokens: int = 0
+    cached_tokens: int = 0
+    output_tokens: int = 0
+    reasoning_tokens: int = 0
+    total_tokens: int = 0
+    
+    def add(self, usage: ResponseUsage) -> None:
+        self.input_tokens += usage.input_tokens
+        self.cached_tokens += usage.input_tokens_details.cached_tokens
+        self.output_tokens += usage.output_tokens
+        self.reasoning_tokens += usage.output_tokens_details.reasoning_tokens
+        self.total_tokens += usage.total_tokens
+
+    def __str__(self):
+        return f"(Input Tokens: {self.input_tokens}, Cached Tokens: {self.cached_tokens}, Output Tokens: {self.output_tokens}, Reasoning Tokens: {self.reasoning_tokens}, Total Tokens: {self.total_tokens})"
+
+    def __repr__(self):
+        return f"(input_tokens: {self.input_tokens}, cached_tokens: {self.cached_tokens}, output_tokens: {self.output_tokens}, reasoning_tokens: {self.reasoning_tokens}, total_tokens: {self.total_tokens})"
