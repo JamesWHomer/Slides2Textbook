@@ -40,17 +40,16 @@ class TokenCount:
     cached_tokens: int = 0
     output_tokens: int = 0
     reasoning_tokens: int = 0
-    total_tokens: int = 0
     
     def add(self, usage: ResponseUsage) -> None:
         self.input_tokens += usage.input_tokens
         self.cached_tokens += usage.input_tokens_details.cached_tokens
         self.output_tokens += usage.output_tokens
         self.reasoning_tokens += usage.output_tokens_details.reasoning_tokens
-        self.total_tokens += usage.total_tokens
+
+    @property
+    def total_tokens(self) -> int:
+        return self.input_tokens + self.output_tokens
 
     def __str__(self):
         return f"(Input Tokens: {self.input_tokens}, Cached Tokens: {self.cached_tokens}, Output Tokens: {self.output_tokens}, Reasoning Tokens: {self.reasoning_tokens}, Total Tokens: {self.total_tokens})"
-
-    def __repr__(self):
-        return f"(input_tokens: {self.input_tokens}, cached_tokens: {self.cached_tokens}, output_tokens: {self.output_tokens}, reasoning_tokens: {self.reasoning_tokens}, total_tokens: {self.total_tokens})"
