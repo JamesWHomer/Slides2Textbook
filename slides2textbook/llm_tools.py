@@ -11,7 +11,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
 
 def generate(system: str, prompt: str, model: str ="gpt-5", effort: str ="medium", structured_output: Optional[Type[BaseModel]] = None):
     messages = [
