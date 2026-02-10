@@ -69,7 +69,7 @@ def run_pipeline(
 
     logger.info(f"Loaded textbook context, beginning to generate textbook of {len(loaded_context)} chapters.")
 
-    input_tokens = output_tokens = 0
+    token_count = llm_tools.TokenCount()
     system_prompt = pb.build_system_prompt()
     textbook: list[str] = []
 
@@ -87,14 +87,14 @@ def run_pipeline(
             textbook,
             name,
         )
-        inp, out, chapter = llm_tools.generate(system_prompt, chapter_prompt, model=model, effort=effort)
-        textbook.append(chapter)
-        input_tokens += inp
-        output_tokens += out
-        logger.info("Finished generating chapter: " + chapter[:100].strip('\n') + "...")
-        md_helper.save_md(chapter, out_dir / "chapters", "chapter-" + str(idx + 1))
+        response = llm_tools.generate(system_prompt, chapter_prompt, model=model, effort=effort)
+        textbook.append(response.output_text)
+        token_count.add(response.usage)
+        logger.info("Finished generating chapter: " + response.output_text[:100].strip('\n') + "...")
+        md_helper.save_md(response.output_text, out_dir / "chapters", "chapter-" + str(idx + 1))
 
-    logger.info(f"Converted slides to longform textbook. Total Input Tokens: {input_tokens}, Total Output Tokens: {output_tokens}")
+    logger.info(f"Converted slides to longform textbook.")
+    logger.info(token_count)
 
     # Combine chapters into textbook string with spacing before each chapter
     textbook_str = "".join(f"\n\n{chapter}" for chapter in textbook)
