@@ -15,7 +15,7 @@ if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set.")
 client = OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
 
-def generate(developer: str, user: str, model: str = "gpt-5.2", effort: str = None) -> Response:
+def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: str = None) -> Response:
     """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
 
     Args:
