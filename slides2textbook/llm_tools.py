@@ -11,9 +11,42 @@ from pydantic import BaseModel
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY environment variable not set.")
-client = OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+
+class ModelProvider(Enum):
+    OPENAI = "openai"
+    GOOGLE = "google"
+    ANTHROPIC = "anthropic"
+
+@lru_cache(maxsize=1)
+def _openai_client() -> OpenAI:
+    return OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
+
+@lru_cache(maxsize=1)
+def _google_client() -> OpenAI:
+    pass
+
+@lru_cache(maxsize=1)
+def _anthropic_client() -> OpenAI:
+    pass
+
+def determine_provider(model_str: str) -> ModelProvider:
+    split = model_str.split('/')
+    if len(split) >= 2:
+        return ModelProvider(split[0])
+    else:
+        if OPENAI_API_KEY:
+            return ModelProvider.OPENAI
+        if GOOGLE_API_KEY:
+            return ModelProvider.GOOGLE
+        if ANTHROPIC_API_KEY:
+            return ModelProvider.ANTHROPIC
+    raise ValueError(f"Cannot determine provider for {model_str!r}: no provider prefix and no API keys configured. Currently only 'openai', 'google' and 'anthropic' are supported.")
+
+def determine_model(model_str: str) -> str:
+    split = model_str.split('/')
+    return split[-1]
 
 def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: str = None) -> Response:
     """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
