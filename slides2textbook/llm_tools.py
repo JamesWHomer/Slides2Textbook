@@ -102,9 +102,11 @@ class TokenCount:
     
     def add(self, usage: ResponseUsage) -> None:
         self.input_tokens += usage.input_tokens
-        self.cached_tokens += usage.input_tokens_details.cached_tokens
+        if usage.input_tokens_details:
+            self.cached_tokens += usage.input_tokens_details.cached_tokens
         self.output_tokens += usage.output_tokens
-        self.reasoning_tokens += usage.output_tokens_details.reasoning_tokens
+        if usage.output_tokens_details:
+            self.reasoning_tokens += usage.output_tokens_details.reasoning_tokens
 
     @property
     def total_tokens(self) -> int:
