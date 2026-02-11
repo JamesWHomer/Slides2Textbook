@@ -25,12 +25,12 @@ def _openai_client() -> OpenAI:
     return OpenAI(api_key=OPENAI_API_KEY, max_retries=3)
 
 @lru_cache(maxsize=1)
-def _google_client() -> OpenAI:
-    pass
+def _google_client() -> NoReturn:
+    raise NotImplementedError("Google provider is not yet supported.")
 
 @lru_cache(maxsize=1)
-def _anthropic_client() -> OpenAI:
-    pass
+def _anthropic_client() -> NoReturn:
+    raise NotImplementedError("Anthropic provider is not yet supported.")
 
 def determine_provider(model_str: str) -> ModelProvider:
     split = model_str.split('/')
@@ -63,7 +63,7 @@ def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: O
     """
     return _openai_client().responses.create(
         model=model,
-        reasoning={"effort": effort},
+        reasoning={"effort": effort}, # effort of value None does not fail API.
         instructions=developer,
         input=user,
     )
@@ -74,7 +74,7 @@ def generate(developer: str, user: str, model_str: str = "openai/gpt-5.2", effor
     Args:
         developer: Developer message also known as System Prompt. Instructions that the LLM follows closely.
         user: User prompt which in our usecase includes context that the LLM can use to generate text. Used less for instruction following than developer.
-        model: The model string used by the API for text generation. Will determine model provider from model of format '<provider>/<model>'.
+        model_str: The model string used by the API for text generation. Will determine model provider from model of format '<provider>/<model>'.
         effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
 
     Returns:
