@@ -41,7 +41,7 @@ Command synopsis (common options):
 - `--no-pdf`: Do not save the PDF file.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
-- `-m, --model`: Specify the model API name used (e.g., "gpt-5", "gpt-5-nano"). Note that it appears that currently only the gpt-5 family of models functions properly, this will be investigated later.
+- `-m, --model`: Specify the API provider ('openai', 'google' or 'anthropic') and model name (e.g. 'gpt-5.2', 'gpt-4.1-mini') in the format of `<provider>/<model>`. Note that currently only the OpenAI provider is supported.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:
@@ -57,4 +57,4 @@ Note that context is loaded from the specified main directory. There are two way
 One feature that you may find useful is textbook_instructions.txt. When a txt file of that name is included in the main directory, it is used as instruction and included in the context of each LLM call, ensuring any specific instructions are followed.
 
 ## AI Policy
-AI can be used for guidance, automatic code review and as a stack overflow replacement, however any code written must be handwritten by a human. I don't have any issues with AI development and AI could be used easily to speed up development 100x in the short term, however this risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human. We don't need more technical debt.
+AI can be used for guidance, automatic code review and as a stack overflow replacement, however any code written must be handwritten by a human. I don't have any issues with AI development and AI could be used easily to speed up development 100x in the short term, however this risks the loss of the mental map of the codebase and the experience gained in the development of this project. Any contributions must be 100% written by a human, we don't need more technical debt. However this being said, note that automated pull request reviews, we are not luddites.
