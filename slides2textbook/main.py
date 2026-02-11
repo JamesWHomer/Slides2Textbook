@@ -87,7 +87,7 @@ def run_pipeline(
             textbook,
             name,
         )
-        response = llm_tools.generate(system_prompt, chapter_prompt, model=model, effort=effort)
+        response = llm_tools.generate(system_prompt, chapter_prompt, model_str=model, effort=effort)
         textbook.append(response.output_text)
         token_count.add(response.usage)
         logger.info("Finished generating chapter: " + response.output_text[:100].strip('\n') + "...")

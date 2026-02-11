@@ -3,7 +3,7 @@ from functools import lru_cache
 import os
 
 from enum import Enum
-from typing import Optional
+from typing import NoReturn, Optional
 
 from dotenv import load_dotenv
 from openai import OpenAI
