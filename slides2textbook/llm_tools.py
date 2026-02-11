@@ -3,6 +3,7 @@ from functools import lru_cache
 import os
 
 from enum import Enum
+from typing import Optional
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -48,7 +49,7 @@ def determine_model(model_str: str) -> str:
     split = model_str.split('/')
     return split[-1]
 
-def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: str = None) -> Response:
+def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: Optional[str] = None) -> Response:
     """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
 
     Args:
