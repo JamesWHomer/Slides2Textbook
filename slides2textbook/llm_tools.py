@@ -27,7 +27,7 @@ def generate(developer: str, user: str, model: str = "gpt-5.2", effort: str = No
     Returns:
         The complete, completed output of the API call. 
     """
-    return client.responses.create(
+    return _openai_client().responses.create(
         model=model,
         reasoning={"effort": effort},
         instructions=developer,
