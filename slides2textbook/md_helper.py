@@ -27,7 +27,7 @@ def _md_to_pdf_pandoc(md: str, out_path: Path, toc: bool) -> None:
         "--mathml",
     ]
     if toc:
-        extra_args.append("--toc")
+        extra_args.append("--toc") # Not yet supported.
 
     pypandoc.convert_text(
         md,
