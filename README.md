@@ -21,9 +21,9 @@ At the current stage in this project there is little that has been completed in 
 1. Obtain and copy a valid [OpenAI key](https://platform.openai.com/)
 2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
 3. Store to local env:
-   <!-- - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary)  !!! DOES NOT CURRENTLY FUNCTION !!!
-   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary) !!! DOES NOT CURRENTLY FUNCTION !!!
-   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary) !!! DOES NOT CURRENTLY FUNCTION !!! --> 
+   - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal) 
+   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
+   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary, only for current terminal) 
    - Optional permanent .env file: Create a file named `.env` in the directory, containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
 
 ### Usage
