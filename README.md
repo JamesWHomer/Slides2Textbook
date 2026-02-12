@@ -30,8 +30,8 @@ At the current stage in this project there is little that has been completed in 
 
 Slides2Textbook converts a slides PDF and/or a plain-text transcript into a long-form textbook chapter. It can save Markdown and/or a rendered PDF.
 
-- Run help: `python -m slides2textbook -h`
-- Typical run (PDF to Markdown + PDF): `python -m slides2textbook --pdf path/to/slides.pdf`
+- Run help: `python -m slides2textbook.main -h`
+- Typical run (PDF to Markdown + PDF): `python -m slides2textbook.main --pdf path/to/slides.pdf`
 
 Command synopsis (common options):
 - `-l, --load PATH`: Path to the input directory that contains the files to be loaded.
@@ -46,7 +46,7 @@ Command synopsis (common options):
 
 Examples:
 - Convert a PDF to both Markdown and PDF:  
-  `python -m slides2textbook -l maths_textbook/input -o maths_textbook/output`
+  `python -m slides2textbook.main -l maths_textbook/input -o maths_textbook/output`
   TODO: More examples
 
 ## Context Loading
