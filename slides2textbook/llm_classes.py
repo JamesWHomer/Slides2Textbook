@@ -10,7 +10,7 @@ class TokenCount:
     output_tokens: int = 0
     reasoning_tokens: int = 0
     
-    def add(self, usage: ResponseUsage) -> None:
+    def add_openai(self, usage: ResponseUsage) -> None:
         self.input_tokens += usage.input_tokens
         if usage.input_tokens_details:
             self.cached_tokens += usage.input_tokens_details.cached_tokens
@@ -32,5 +32,4 @@ class LLM_Response:
     """
     def __init__(self, output_text: str, token_count: TokenCount):
         self.output_text = output_text
-        self.token_count: TokenCount = TokenCount()
-        self.token_count.add()
+        self.token_count = token_count
