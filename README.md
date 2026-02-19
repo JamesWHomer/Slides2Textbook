@@ -20,11 +20,13 @@ At the current stage in this project there is little that has been completed in 
 ### Configure OpenAI credentials
 1. Obtain and copy a valid [OpenAI key](https://platform.openai.com/)
 2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
-3. Store to local env:
-   - macOS/Linux: `export OPENAI_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal) 
-   - Windows (Powershell): `$env:OPENAI_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
-   - Windows (cmd): `set OPENAI_API_KEY=sk-...your_key_here...` (temporary, only for current terminal) 
-   - Optional permanent .env file: Create a file named `.env` in the directory, containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted. 
+3. Set the Environment Variables:
+  Use `OPENAI_API_KEY` for OpenAI. `GEMINI_API_KEY` for Google, `ANTHROPIC_API_KEY` for Anthropic.
+   - macOS/Linux: `export PROVIDER_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal) 
+   - Windows (Powershell): `$env:PROVIDER_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
+   - Windows (cmd): `set PROVIDER_API_KEY=sk-...your_key_here...` (temporary, only for current terminal) 
+   - Optional permanent .env file: Create a file named `.env` in the directory, containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted.
+   - If your system supports setting environment variables in other ways, you can likely use that as an alternative.
 
 ### Usage
 
@@ -41,7 +43,7 @@ Command synopsis (common options):
 - `--no-pdf`: Do not save the PDF file.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
-- `-m, --model`: Specify the API provider ('openai', 'google' or 'anthropic') and model name (e.g. 'gpt-5.2', 'gpt-4.1-mini') in the format of `<provider>/<model>`. Note that currently only the OpenAI provider is supported.
+- `-m, --model`: Specify the API provider ('openai', 'gemini', or 'anthropic') and model name (e.g. 'gpt-5.2', 'gpt-4.1-mini') in the format of `<provider>/<model>`.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:

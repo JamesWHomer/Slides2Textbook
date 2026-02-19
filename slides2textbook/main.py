@@ -10,6 +10,8 @@ from slides2textbook import context_loader
 import logging
 from pathlib import Path
 
+from slides2textbook.llm_classes import LLM_Response
+
 logger = logging.getLogger(__name__)
 
 def main(argv: list[str] | None = None) -> None:
@@ -87,9 +89,9 @@ def run_pipeline(
             textbook,
             name,
         )
-        response = llm_tools.generate(system_prompt, chapter_prompt, model_str=model, effort=effort)
+        response: LLM_Response = llm_tools.generate(system_prompt, chapter_prompt, model_str=model, effort=effort)
         textbook.append(response.output_text)
-        token_count.add(response.usage)
+        token_count.add(response.token_count)
         logger.info("Finished generating chapter: " + response.output_text[:100].strip('\n') + "...")
         md_helper.save_md(response.output_text, out_dir / "chapters", "chapter-" + str(idx + 1))
 

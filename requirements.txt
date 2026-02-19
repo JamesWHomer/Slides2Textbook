@@ -5,3 +5,4 @@ pymupdf4llm
 pypandoc_binary
 pydantic
 markdown-pdf
+google-genai
