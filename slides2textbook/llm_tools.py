@@ -52,7 +52,7 @@ def determine_provider(model_str: str) -> ModelProvider:
 
 def determine_model(model_str: str) -> str:
     split = model_str.split('/')
-    return split[-1]
+    return split[-1] # TODO: Handle future providers that might amalgamate models. For example `huggingface/openai/gpt-5`
 
 def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: Optional[str] = None) -> LLM_Response:
     """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
