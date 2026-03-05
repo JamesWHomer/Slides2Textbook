@@ -43,4 +43,5 @@ RULES: dict[str, str] = {
     "no_images": "You will not be able to see or create images.",
     "standalone": "The textbook chapter should be standalone.",
     "no_preamble": "Do not start with a preamble; begin the textbook chapter immediately.",
+    "heading_hierarchy": "Use ## only for the chapter title. Use ### or lower for sections within a chapter.",
 }

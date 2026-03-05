@@ -3,6 +3,7 @@ Module for saving and converting Markdown data.
 """
 
 import logging
+import tempfile
 from pathlib import Path
 
 import pypandoc
@@ -17,25 +18,62 @@ def save_md(md: str, out_dir: Path, name: str) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / f"{name}.md").write_text(md, encoding="utf-8")
 
+_LATEX_PREAMBLE = r"""
+\usepackage{enumitem}
+\setlistdepth{9}
+
+\renewlist{itemize}{itemize}{9}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=\textendash}
+\setlist[itemize,3]{label=\textasteriskcentered}
+\setlist[itemize,4]{label=\textperiodcentered}
+\setlist[itemize,5]{label=\textbullet}
+\setlist[itemize,6]{label=\textendash}
+\setlist[itemize,7]{label=\textasteriskcentered}
+\setlist[itemize,8]{label=\textperiodcentered}
+\setlist[itemize,9]{label=\textbullet}
+
+\renewlist{enumerate}{enumerate}{9}
+\setlist[enumerate,1]{label=\arabic*.}
+\setlist[enumerate,2]{label=\alph*.}
+\setlist[enumerate,3]{label=\roman*.}
+\setlist[enumerate,4]{label=\arabic*.}
+\setlist[enumerate,5]{label=\alph*.}
+\setlist[enumerate,6]{label=\roman*.}
+\setlist[enumerate,7]{label=\arabic*.}
+\setlist[enumerate,8]{label=\alph*.}
+\setlist[enumerate,9]{label=\roman*.}
+"""
+
 def _md_to_pdf_pandoc(md: str, out_path: Path, toc: bool) -> None:
     """Converts md string to PDF via pandoc (requires a TeX engine on PATH)."""
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".tex", delete=False, encoding="utf-8"
+    ) as hdr:
+        hdr.write(_LATEX_PREAMBLE)
+        hdr_path = hdr.name
+
     extra_args = [
         "--pdf-engine=xelatex",
         "--variable=geometry:margin=1in",
         "--variable=fontsize=11pt",
         "--variable=linestretch=1.15",
         "--mathml",
+        f"--include-in-header={hdr_path}",
     ]
     if toc:
         extra_args.append("--toc")
 
-    pypandoc.convert_text(
-        md,
-        "pdf",
-        format="markdown+tex_math_single_backslash+tex_math_dollars",
-        outputfile=str(out_path),
-        extra_args=extra_args,
-    )
+    try:
+        pypandoc.convert_text(
+            md,
+            "pdf",
+            format="markdown+tex_math_single_backslash+tex_math_dollars",
+            outputfile=str(out_path),
+            extra_args=extra_args,
+        )
+    finally:
+        Path(hdr_path).unlink(missing_ok=True)
 
 def _md_to_pdf_fallback(md: str, out_path: Path, toc: bool) -> None:
     """Converts md string to PDF via markdown-pdf (no TeX required)."""
