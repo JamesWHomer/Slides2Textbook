@@ -8,8 +8,13 @@ from enum import Enum
 
 class ModelProvider(Enum):
     OPENAI = "openai"
-    GEMINI = "gemini" # Google Gemini API
+    GEMINI = "gemini"
     ANTHROPIC = "anthropic"
+
+    @classmethod
+    def _missing_(cls, value):
+        aliases = {"google": cls.GEMINI}
+        return aliases.get(value)
 
 @dataclass
 class TokenCount:
