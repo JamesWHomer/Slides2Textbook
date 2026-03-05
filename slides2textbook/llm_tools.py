@@ -90,19 +90,13 @@ def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", 
     Returns:
         The complete, completed output of the API call. 
     """
-    thinking_config = None
-    if effort:
-        level_map = {"low": "LOW", "medium": "MEDIUM", "high": "HIGH"} # I don't think I need this.
-        level = level_map.get(effort.lower())
-        if level:
-            thinking_config = types.ThinkingConfig(thinking_level=level)
 
     response = _gemini_client().models.generate_content(
         model=model,
         contents=user,
         config=types.GenerateContentConfig(
             system_instruction=developer,
-            thinking_config=thinking_config,
+            thinking_config=effort,
         ),
     )
 
