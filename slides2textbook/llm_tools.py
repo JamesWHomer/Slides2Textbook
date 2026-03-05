@@ -78,6 +78,15 @@ def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: O
 
     return LLM_Response(response.output_text, token_count)
 
+EFFORT_TO_THINKING_CONFIG = {
+    None:      None,
+    "none":    types.ThinkingConfig(thinking_budget=0),
+    "minimal": types.ThinkingConfig(thinking_budget=1024),
+    "low":     types.ThinkingConfig(thinking_budget=4096),
+    "medium":  types.ThinkingConfig(thinking_budget=8192),
+    "high":    types.ThinkingConfig(thinking_budget=-1),
+}
+
 def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", effort: Optional[str] = None) -> LLM_Response:
     """Generate and return the output of a call to the Google Gemini api. No streaming supported.
 
@@ -90,13 +99,14 @@ def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", 
     Returns:
         The complete, completed output of the API call. 
     """
+    thinking_config = EFFORT_TO_THINKING_CONFIG.get(effort)
 
     response = _gemini_client().models.generate_content(
         model=model,
         contents=user,
         config=types.GenerateContentConfig(
             system_instruction=developer,
-            thinking_config=effort,
+            thinking_config=thinking_config,
         ),
     )
 
