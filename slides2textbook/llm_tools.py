@@ -115,8 +115,6 @@ def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", 
 
     return LLM_Response(response.text, token_count)
 
-# print(generate_gemini("say poopers essay", "poopers make a poessay on poopers", "gemini-3-flash-preview", "minimal").token_count)
-
 def generate(developer: str, user: str, model_str: str = "openai/gpt-5.2", effort: str = None) -> LLM_Response:
     """Generate and return the output of a call to the various API's. No streaming supported.
 
