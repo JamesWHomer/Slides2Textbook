@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slides2textbook"
+version = "0.1.0"
+description = "Convert slides, transcripts, and notes into well-formatted textbooks using LLMs."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "JamesWHomer" },
+]
+dependencies = [
+    "openai",
+    "python-dotenv",
+    "markdown-pdf",
+    "pymupdf4llm",
+    "pypandoc_binary",
+    "pydantic",
+    "google-genai",
+]
+
+[project.urls]
+Repository = "https://github.com/JamesWHomer/Slides2Textbook"
+
+[project.scripts]
+slides2textbook = "slides2textbook.main:main"
+
+[tool.setuptools.packages.find]
+include = ["slides2textbook*"]
