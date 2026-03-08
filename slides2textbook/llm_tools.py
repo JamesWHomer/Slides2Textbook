@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from functools import lru_cache
 import logging
+import mimetypes
 import os
 import base64
 
@@ -166,11 +167,14 @@ def image_analysis(instruction: str, image_path: str | Path, model_str: str = "o
 
 
 def openai_image_analysis(instruction: str, image_path: str | Path, model: str = "gpt-5.4", effort: str = None) -> LLM_Response:
-    def encode_image(image_path):
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode("utf-8")
+    image_path = Path(image_path)
 
-    base64_image = encode_image(image_path)
+    mime_type, _ = mimetypes.guess_type(image_path.name)
+    if mime_type is None:
+        mime_type = "application/octet-stream"
+
+    with open(image_path, "rb") as image_file:
+        base64_image = base64.b64encode(image_file.read()).decode("utf-8")
 
     response = _openai_client().responses.create(
         model=model,
@@ -185,7 +189,7 @@ def openai_image_analysis(instruction: str, image_path: str | Path, model: str =
                 "content": [
                     {
                         "type": "input_image",
-                        "image_url": f"data:image/jpeg;base64,{base64_image}",
+                        "image_url": f"data:{mime_type};base64,{base64_image}",
                     },
                 ],
             }
