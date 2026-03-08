@@ -43,7 +43,7 @@ Command synopsis (common options):
 - `--no-pdf`: Do not save the PDF file.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
-- `-m, --model`: Specify the API provider ('openai', 'gemini', or 'anthropic') and model name (e.g. 'gpt-5.2', 'gpt-4.1-mini') in the format of `<provider>/<model>`.
+- `-m, --model`: Specify the API provider ('openai', 'gemini', or 'anthropic') and model name (e.g. 'gpt-5.4', 'gpt-4.1-mini') in the format of `<provider>/<model>`.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:

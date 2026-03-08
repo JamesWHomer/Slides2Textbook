@@ -5,6 +5,7 @@ from pathlib import Path
 
 from openai.types import file_chunking_strategy
 from slides2textbook import pdf_decoder
+from slides2textbook import llm_tools
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ def _natural_key(value: str) -> list[object]:
     parts = re.split(r"(\d+)", value)
     return [int(part) if part.isdigit() else part.lower() for part in parts]
 
-def load_main_directory(path: Path) -> list[str]:
+def load_main_directory(path: Path, *, vision_model: str = "openai/gpt-5.4") -> list[str]:
     """
     Load all the subdirectories and their files as their respective chapter context. 
     Each chapter context is created based on the context held within each chapter directory in alphabetic order.
@@ -21,15 +22,15 @@ def load_main_directory(path: Path) -> list[str]:
     dirs = sorted((p for p in path.iterdir() if p.is_dir()), key=lambda p: _natural_key(p.name))
 
     if dirs:
-        return [load_directory(chapter_context) for chapter_context in dirs]
+        return [load_directory(chapter_context, vision_model=vision_model) for chapter_context in dirs]
         
-    chapters = load_directory_chapters(path)
+    chapters = load_directory_chapters(path, vision_model=vision_model)
     if len(chapters) < 1:
         logger.error("No context loaded. Aborting program.")
     return chapters
 
 
-def load_directory_chapters(path: Path) -> list[str]:
+def load_directory_chapters(path: Path, *, vision_model: str = "openai/gpt-5.4") -> list[str]:
     """
     Load directory as textbook context where each set of files that share the same basename is considered a seperate chapter context.
     """
@@ -60,9 +61,9 @@ def load_directory_chapters(path: Path) -> list[str]:
     if current:
         chapters.append(current)
 
-    return [load_context(chapter) for chapter in chapters]
+    return [load_context(chapter, vision_model=vision_model) for chapter in chapters]
 
-def load_directory(path: Path) -> str:
+def load_directory(path: Path, *, vision_model: str = "openai/gpt-5.4") -> str:
     """
     Load directory as chapter context, recursive inclusion of subdirectories, sorted by relative folder, then filename.
     """
@@ -74,9 +75,9 @@ def load_directory(path: Path) -> str:
         ),
     )
 
-    return load_context(files)
+    return load_context(files, vision_model=vision_model)
 
-def load_context(paths: list[Path] | Path, return_instructions: bool = False) -> str:
+def load_context(paths: list[Path] | Path, return_instructions: bool = False, *, vision_model: str = "openai/gpt-5.4") -> str:
     """ 
     Loads the list of paths and returns a combined LLM readable string.
     """
@@ -96,6 +97,8 @@ def load_context(paths: list[Path] | Path, return_instructions: bool = False) ->
                 context_dict[key] = pdf_decoder.to_md(file)
             case ".txt" | ".md" | ".json" | ".html": # TODO: A lot more, if this is the approach we are taking.
                 context_dict[key] = load_textfile(file)
+            case ".png" | ".jpg" | ".jpeg":
+                context_dict[key] = load_image(file, model_str=vision_model)
             case _: # TODO: There has **got** to be a better way to do this... Shit code, redo.
                 logger.error("Unsupported filetype included in context")
                 raise SystemExit(1)
@@ -123,3 +126,27 @@ def load_textfile(path: Path, encoding="utf-8") -> str:
     """
     with open(str(path), 'r', encoding=encoding) as t:
         return t.read()
+
+IMAGE_TO_TEXT_PROMPT = (
+    "You are a strict image transcription model for lecture slides and academic material. "
+    "Transcribe the meaningful academic content visible in the image. "
+    "Do NOT solve, simplify, elaborate on, or add any content beyond what is shown. "
+    "Do NOT answer questions or problems that appear in the image. "
+    "Omit slide boilerplate: headers, footers, page numbers, course codes, "
+    "university logos, presenter names, dates, and repeated navigation elements. "
+    "Focus only on the core educational content (definitions, theorems, examples, problems, proofs, etc.). "
+    "For non-text visual elements (diagrams, graphs, charts, figures), "
+    "provide a relevent description in the format: *[Image description: <description>]*. "
+    "Use markdown and LaTeX (\\( \\) for inline, \\[ \\] for display) for mathematical notation."
+)
+
+def load_image(path: Path, model_str: str = "openai/gpt-5.4") -> str:
+    """
+    Load an image and transcribe it using LLMs. Effort is always None
+    because image transcription is a mechanical task that doesn't
+    benefit from reasoning.
+    """
+    response = llm_tools.image_analysis(IMAGE_TO_TEXT_PROMPT, path, model_str, effort=None)
+    logger.info(f"Finished transcribing image at path={str(path)} with model={model_str}.")
+    logger.info(str(response.token_count))
+    return response.output_text

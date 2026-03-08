@@ -30,6 +30,7 @@ def main(argv: list[str] | None = None) -> None:
             make_epub=args.make_epub,
             model=args.model,
             effort = args.effort,
+            vision_model=args.vision_model or args.model,
         )
     except Exception:
         logger.exception("Unhandled error while running Slides2Textbook pipeline")
@@ -44,12 +45,13 @@ def run_pipeline(
     make_epub: bool,
     model: str,
     effort: str,
+    vision_model: str = "openai/gpt-5.4",
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
 
-    loaded_context: list[str] = context_loader.load_main_directory(path)
+    loaded_context: list[str] = context_loader.load_main_directory(path, vision_model=vision_model)
 
     if not loaded_context:
         logger.error("No context loaded, aborting program.")

@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from functools import lru_cache
 import logging
+import mimetypes
 import os
+import base64
 
 from enum import Enum
+from pathlib import Path
 from typing import NoReturn, Optional
 
 from dotenv import load_dotenv
@@ -54,7 +57,7 @@ def determine_model(model_str: str) -> str:
     split = model_str.split('/')
     return split[-1] # TODO: Handle future providers that might amalgamate models. For example `huggingface/openai/gpt-5`
 
-def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: Optional[str] = None) -> LLM_Response:
+def generate_openai(developer: str, user: str, model: str = "gpt-5.4", effort: Optional[str] = None) -> LLM_Response:
     """Generate and return the output of a call to the OpenAI Responses api. No streaming supported.
 
     Args:
@@ -64,7 +67,7 @@ def generate_openai(developer: str, user: str, model: str = "gpt-5.2", effort: O
         effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
 
     Returns:
-        The complete, completed output of the API call. 
+        An LLM_Response Object. 
     """
     response = _openai_client().responses.create(
         model=model,
@@ -97,7 +100,7 @@ def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", 
         effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
 
     Returns:
-        The complete, completed output of the API call. 
+        An LLM_Response Object.
     """
     thinking_config = EFFORT_TO_THINKING_CONFIG.get(effort)
 
@@ -115,7 +118,7 @@ def generate_gemini(developer: str, user: str, model: str = "gemini-3.0-flash", 
 
     return LLM_Response(response.text, token_count)
 
-def generate(developer: str, user: str, model_str: str = "openai/gpt-5.2", effort: str = None) -> LLM_Response:
+def generate(developer: str, user: str, model_str: str = "openai/gpt-5.4", effort: str = None) -> LLM_Response:
     """Generate and return the output of a call to the various API's. No streaming supported.
 
     Args:
@@ -125,7 +128,7 @@ def generate(developer: str, user: str, model_str: str = "openai/gpt-5.2", effor
         effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
 
     Returns:
-        The complete, completed output of the API call. 
+        An LLM_Response Object. 
     """
     model = determine_model(model_str)
     provider = determine_provider(model_str)
@@ -139,3 +142,61 @@ def generate(developer: str, user: str, model_str: str = "openai/gpt-5.2", effor
         case _:
             raise ValueError(f"Unsupported model provider for model_str={model_str!r}: {provider!r}. Currently only 'openai', 'google' and 'anthropic' are supported.")
         
+def image_analysis(instruction: str, image_path: str | Path, model_str: str = "openai/gpt-5.4", effort: str = None) -> LLM_Response:
+    """Analyze an image with various API's. No streaming supported.
+
+    Args:
+        instruction: Instructions for what the model should do with the image.
+        model_str: The model string used by the API for text generation. Will determine model provider from model of format '<provider>/<model>'.
+        effort: The reasoning/thinking effort that the model uses. For example none/minimal/low/medium/high. Higher effort -> Higher latency.
+
+    Returns:
+        An LLM_Response Object. 
+    """
+    model = determine_model(model_str)
+    provider = determine_provider(model_str)
+    match provider:
+        case ModelProvider.OPENAI:
+            return openai_image_analysis(instruction, image_path, model, effort)
+        case ModelProvider.GEMINI:
+            raise NotImplementedError("Gemini provider is not yet supported for image understanding.")
+        case ModelProvider.ANTHROPIC:
+            raise NotImplementedError("Anthropic provider is not yet supported for image understanding.")
+        case _:
+            raise ValueError(f"Unsupported model provider for model_str={model_str!r}: {provider!r}. Currently only 'openai', 'google' and 'anthropic' are supported.")
+
+
+def openai_image_analysis(instruction: str, image_path: str | Path, model: str = "gpt-5.4", effort: str = None) -> LLM_Response:
+    image_path = Path(image_path)
+
+    mime_type, _ = mimetypes.guess_type(image_path.name)
+    if mime_type is None:
+        mime_type = "application/octet-stream"
+
+    with open(image_path, "rb") as image_file:
+        base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+
+    response = _openai_client().responses.create(
+        model=model,
+        reasoning={"effort": effort},
+        input=[
+            {
+                "role": "developer",
+                "content": instruction
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_image",
+                        "image_url": f"data:{mime_type};base64,{base64_image}",
+                    },
+                ],
+            }
+        ],
+    )
+
+    token_count = TokenCount()
+    token_count.add_openai(response.usage)
+
+    return LLM_Response(response.output_text, token_count)
