@@ -8,9 +8,11 @@ Check out the Slides2Textbook [Github Project](https://github.com/users/JamesWHo
 
 This project is **not** production ready. There will be bugs, issues and lack of support. Use at your own risk.
 
+Note that Anthropic models are not currently supported.
+
 ## Guide
 
-Ensure that python (3.10+ recommended) and git are installed on your PATH.
+Ensure that python (3.10+ required) and git are installed on your PATH.
 
 ### Installation
 
@@ -37,6 +39,7 @@ API keys are stored and used on your system using something called "Environment 
    - macOS/Linux: `export PROVIDER_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (Powershell): `$env:PROVIDER_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (cmd): `set PROVIDER_API_KEY=sk-...your_key_here...` (temporary, only for current terminal)
+   - If Slides2Textbook is used with a `.env` file in the same directory it is run from, any api key environment variables will be loaded from there.
    - If your system supports setting environment variables in other ways, you can likely use that as an alternative. It is likely much more convenient to set environment variables permanently.
 
 ### Usage
@@ -49,18 +52,20 @@ Command synopsis (common options):
 
 - `-l, --load PATH`: Path to the input directory that contains the files to be loaded.
 - `-o, --out-dir PATH`: Output directory. Default: `output`.
-- `-n, --name NAME`: Basename for outputs. Defaults to the PDF filename (without extension); if no PDF, falls back to TXT filename; otherwise `textbook`.
-- `--no-md`: Do not save the Markdown file.
-- `--no-pdf`: Do not save the PDF file.
+- `-n, --name NAME`: Basename for outputs. Defaults to the input directory name; otherwise `textbook`.
+- `--no-md`: Do not save the Markdown file into the output directory.
+- `--no-pdf`: Do not generate and save the PDF file into the output directory.
+- `--no-epub`: Do not generate and save the EPUB file into the output directory.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
 - `-m, --model`: Specify the API provider ('openai', 'gemini', or 'anthropic') and model name (e.g. 'gpt-5.4', 'gpt-4.1-mini') in the format of `<provider>/<model>`.
+- `-e, --effort`: Specify the reasoning effort that the model uses. The model specific must support reasoning controls to be able to use this flag.
 - `--vision-model`: Override the model used for image transcription (defaults to -m). Format: `<provider>/<model>`.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:
 
-This is a basic example sufficient for 90% of usecases: `slides2textbook -l maths_textbook/input -o maths_textbook/output -n "Mathematics Textbook" -m gpt-5.4 -e xhigh`
+This is a basic example sufficient for 90% of usecases: `slides2textbook -l maths_textbook/input -o maths_textbook/output -n "Mathematics Textbook" -m openai/gpt-5.4 -e high`
 
 Check out more examples on the [Github](https://github.com/JamesWHomer/Slides2Textbook/tree/main/examples).
 
@@ -71,7 +76,22 @@ Note that context is loaded from the input directory. There are two ways of load
 1. **Folder Based**: Each folder (in natural sort order, similar to alphabetic however for example 1,2,3,...,10,11 instead of 1, 10, 11, ..., 2) is considered it's own chapter. All files/context within the subchapters are loaded individually. This is the recommended method.
 2. **Name Based**: Files in the folder are loaded in natural order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
 
+Supported input file formats:
+
+- `.pdf`
+- `.txt`
+- `.md`
+- `.json`
+- `.html`
+- `.png`
+- `.jpg`
+- `.jpeg`
+
+## Metadata
+
 One feature that you may find useful is textbook_instructions.txt. When a txt file of that name is included in the main directory, it is used as instruction and included in the context of each LLM call, ensuring any specific instructions are followed.
+
+Slides2Textbook does not currently support metadata for textbooks.
 
 ## AI Policy
 
