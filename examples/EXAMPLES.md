@@ -6,4 +6,4 @@ Here you will find several example textbooks with the command used to generate e
 
 An introduction to the intellectual enterprises of computer science and the art of programming in an online course from Harvard.
 
-`python -m slides2textbook.main -l examples/cs50-2024/input -o examples/cs50-2024/output -m gpt-5.4 -e high -n CS50-2024`
+`slides2textbook -l examples/cs50-2024/input -o examples/cs50-2024/output -m gpt-5.4 -e high -n CS50-2024`

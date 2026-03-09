@@ -14,7 +14,7 @@ Ensure that python (3.10+ recommended) and git are installed on your PATH.
 
 ### Installation
 
-Assuming both python and pip are installed on your system, Slides2Textbook can be installed quickly by running:
+Slides2Textbook can be installed quickly by running:
 
 `pip install git+https://github.com/JamesWHomer/Slides2Textbook.git`
 
@@ -26,24 +26,24 @@ or for updating when there hasn't been a formal update:
 
 `pip install --force-reinstall git+https://github.com/JamesWHomer/Slides2Textbook.git`
 
-### Configure OpenAI credentials
+### Configure API credentials
 
-1. Obtain and copy a valid [OpenAI key](https://platform.openai.com/)
+API keys are stored and used on your system using something called "Environment Variables". You can set them however you please however if you are inexperienced with this, this is how:
+
+1. Obtain and copy a valid API key from either the [OpenAI API](https://platform.openai.com/) or [Gemini API](https://ai.google.dev/gemini-api/docs).
 2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
 3. Set the Environment Variables:
   Use `OPENAI_API_KEY` for OpenAI. `GEMINI_API_KEY` for Google, `ANTHROPIC_API_KEY` for Anthropic.
-   - macOS/Linux: `export PROVIDER_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal) 
+   - macOS/Linux: `export PROVIDER_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (Powershell): `$env:PROVIDER_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (cmd): `set PROVIDER_API_KEY=sk-...your_key_here...` (temporary, only for current terminal)
-   - Optional permanent .env file: Create a file named `.env` in the directory, containing `OPENAI_API_KEY=sk-...your_key_here...`. This will stay permanently unless deleted.
-   - If your system supports setting environment variables in other ways, you can likely use that as an alternative.
+   - If your system supports setting environment variables in other ways, you can likely use that as an alternative. It is likely much more convenient to set environment variables permanently.
 
 ### Usage
 
-Slides2Textbook converts a slides PDF and/or a plain-text transcript into a long-form textbook chapter. It can save Markdown and/or a rendered PDF.
+Before running commands, use `cd <path to directory>` to navigate your terminal to the directory containing your input files.
 
-- Run help: `python -m slides2textbook.main -h`
-- Typical run (PDF to Markdown + PDF): `python -m slides2textbook.main --pdf path/to/slides.pdf`
+- Run help: `slides2textbook -h`
 
 Command synopsis (common options):
 
@@ -60,13 +60,13 @@ Command synopsis (common options):
 
 Examples:
 
-- Convert a PDF to both Markdown and PDF:  
-  `python -m slides2textbook.main -l maths_textbook/input -o maths_textbook/output`
-  TODO: More examples
+This is a basic example sufficient for 90% of usecases: `slides2textbook -l maths_textbook/input -o maths_textbook/output -n "Mathematics Textbook" -m gpt-5.4 -e xhigh`
+
+Check out more examples on the [Github](https://github.com/JamesWHomer/Slides2Textbook/tree/main/examples).
 
 ## Context Loading
 
-Note that context is loaded from the specified main directory. There are two ways of loading context:
+Note that context is loaded from the input directory. There are two ways of loading context:
 
 1. **Folder Based**: Each folder (in natural sort order, similar to alphabetic however for example 1,2,3,...,10,11 instead of 1, 10, 11, ..., 2) is considered it's own chapter. All files/context within the subchapters are loaded individually. This is the recommended method.
 2. **Name Based**: Files in the folder are loaded in natural order. Files sharing the same stem (filename without extension) are treated as members of the same chapter.
