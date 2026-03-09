@@ -1,16 +1,8 @@
-# The main orchestrator.
-from ntpath import isfile
-from slides2textbook import pdf_decoder
-from slides2textbook import llm_tools
-from slides2textbook import md_helper
-from slides2textbook import prompt_builder as pb
-from slides2textbook import cli
-from slides2textbook import logconfig
-from slides2textbook import context_loader
 import logging
 from pathlib import Path
 
-from slides2textbook.llm_classes import LLM_Response
+from slides2textbook import cli
+from slides2textbook import logconfig
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +39,9 @@ def run_pipeline(
     effort: str,
     vision_model: str = "openai/gpt-5.4",
 ) -> None:
+    from slides2textbook import context_loader, llm_tools, md_helper, prompt_builder as pb
+    from slides2textbook.llm_classes import LLM_Response
+
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Starting SlidesToTextbook, now loading context.")
@@ -135,6 +130,8 @@ def save_files(textbook_str: str, out_dir: Path, name: str, save_md: bool = True
     """
     Function to simplify run_pipeline.
     """
+    from slides2textbook import md_helper
+
     if save_md:
         md_helper.save_md(textbook_str, out_dir, name)
         logger.info(f"Saved markdown to {out_dir}/{name}")

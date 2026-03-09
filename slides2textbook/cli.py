@@ -3,19 +3,19 @@ from pathlib import Path
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog='Slide2Textbook',
+        prog='Slides2Textbook',
         description="Slide2Textbook allows you to convert pdf's and other context into high quality textbooks.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("-l", "--load-context", dest="context_path", required=True, type=existing_dir, help="The path to a directory that contains the context of the textbook (e.g. -l codingtextbook)")
+    parser.add_argument("-l", "--load", dest="context_path", required=True, type=existing_dir, help="The path to a directory that contains the context of the textbook (e.g. -l codingtextbook)")
     parser.add_argument("-o", "--out-dir", type=Path, default=Path("output"), help="Directory to place outputs")
-    parser.add_argument("-n", "--name", help="Basename for outputs (defaults to PDF filename)")
+    parser.add_argument("-n", "--name", help="Basename for outputs (defaults to input directory name)")
     parser.add_argument("--no-md", dest="save_md", action="store_false", help="Skip saving the markdown file")
     parser.add_argument("--no-pdf", dest="make_pdf", action="store_false", help="Skip saving the pdf file")
     parser.add_argument("--no-epub", dest="make_epub", action="store_false", help="Skip saving the epub file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
     parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
-    parser.add_argument("-m", "--model", type=str, default="openai/gpt-5.4", help="Specify which provider and model will be used in the format of '<provider>/<model>' for example 'openai/gpt-5.4'. Defaults to included API keys. Providers are, 'openai', 'google' and 'anthropic'. Currently only OpenAI is supported.")
+    parser.add_argument("-m", "--model", type=str, default="openai/gpt-5.4", help="Specify which provider and model will be used in the format of '<provider>/<model>' for example 'openai/gpt-5.4'. Defaults to included API keys. Providers are, 'openai', 'gemini' and 'anthropic'. Anthropic is not yet supported.")
     parser.add_argument("--vision-model", type=str, default=None, help="Override the model used for image transcription (defaults to -m). Format: '<provider>/<model>'.")
     parser.add_argument("-e", "--effort", type=str, default=None, help="The reasoning effort that will be used for the model, only supported by some models.")
     parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
