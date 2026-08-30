@@ -10,6 +10,7 @@ class ModelProvider(Enum):
     OPENAI = "openai"
     GEMINI = "gemini"
     ANTHROPIC = "anthropic"
+    OPENROUTER = "openrouter"
 
     @classmethod
     def _missing_(cls, value):
@@ -53,6 +54,19 @@ class TokenCount:
         if usage.thoughts_token_count:
             self.reasoning_tokens += usage.thoughts_token_count
         
+
+    def add_openrouter(self, usage) -> None:
+        """Add usage from an OpenAI-style chat completion (used by OpenRouter)."""
+        if not self.supported:
+            return
+        self.input_tokens += usage.prompt_tokens
+        prompt_details = getattr(usage, "prompt_tokens_details", None)
+        if prompt_details and prompt_details.cached_tokens:
+            self.cached_tokens += prompt_details.cached_tokens
+        self.output_tokens += usage.completion_tokens
+        completion_details = getattr(usage, "completion_tokens_details", None)
+        if completion_details and completion_details.reasoning_tokens:
+            self.reasoning_tokens += completion_details.reasoning_tokens
 
     def add_anthropic(self):
         if not self.supported:

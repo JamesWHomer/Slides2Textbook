@@ -15,9 +15,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-epub", dest="make_epub", action="store_false", help="Skip saving the epub file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (use -vv for more)")
     parser.add_argument("-q", "--quiet", action="count", default=0, help="Decrease verbosity (use -qq to silence info)")
-    parser.add_argument("-m", "--model", type=str, default="openai/gpt-5.4", help="Specify which provider and model will be used in the format of '<provider>/<model>' for example 'openai/gpt-5.4'. Defaults to included API keys. Providers are, 'openai', 'gemini' and 'anthropic'. Anthropic is not yet supported.")
+    parser.add_argument("-m", "--model", type=str, default="openai/gpt-5.4", help="Specify which provider and model will be used in the format of '<provider>/<model>' for example 'openai/gpt-5.4'. Defaults to included API keys. Providers are, 'openai', 'gemini', 'anthropic' and 'openrouter' (e.g. 'openrouter/openai/gpt-5.4'). Anthropic is not yet supported.")
     parser.add_argument("--vision-model", type=str, default=None, help="Override the model used for image transcription (defaults to -m). Format: '<provider>/<model>'.")
     parser.add_argument("-e", "--effort", type=str, default=None, help="The reasoning effort that will be used for the model, only supported by some models.")
+    parser.add_argument("--prev-chapters", type=int, default=0, help="Number of previously generated chapters to include in full as context when generating each chapter. Use -1 to include all previous chapters.")
+    parser.add_argument("--include-outline", action="store_true", help="Include the headings of previous chapters that are not fully in context, so the model knows what has already been covered.")
     parser.add_argument("--log-file", type=Path, default=None, help="Optional path to write logs (in addition to stderr).")
     return parser
 

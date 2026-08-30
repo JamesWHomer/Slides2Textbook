@@ -31,17 +31,18 @@ RULES: dict[str, str] = {
     "prose": (
         "Write textbook-style prose that teaches by building ideas step by step, defining terms before use, and maintaining a "
         "steady narrative flow. Prefer longer, low-density sentences and cohesive paragraphs that favor clarity and learner "
-        "comprehension over compression."
+        "comprehension over compression. When showing example questions, first pose the complete question to the reader and only then show the complete process used to determine the answer as well as the answer. "
+        "Each chapter should include a introduction on what will be covered in the chapter as well as a summary which concisely lists the most important concepts/formulas"
     ),
     "fidelity": "Base the textbook heavily on the slides/transcripts; do not omit information or go off topic unless necessary.",
     "markdown_only": "Respond only in Markdown. Do not output anything except the textbook.",
     "no_artifacts": "Do not include unnecessary artifacts such as page numbers or repeated headers.",
-    "no_extras": (
-        "Do not include extra features such as exercises unless they are explicitly shown in the slides/transcripts. "
-        "Your task is to create a chapter based on slides/transcripts, not to add extras."
-    ),
+    # "no_extras": (
+    #     "Do not include extra features such as exercises unless they are explicitly shown in the slides/transcripts. "
+    #     "Your task is to create a chapter based on slides/transcripts, not to add extras."
+    # ),
     "no_images": "You will not be able to see or create images.",
-    "standalone": "The textbook chapter should be standalone.",
+    "standalone": "The textbook chapter should be standalone. Do not assume the reader has seen the lecture or the slides previously. However assume that knowledge assumed by the lecture/slides is already known to the user.",
     "no_preamble": "Do not start with a preamble; begin the textbook chapter immediately.",
     "heading_hierarchy": "Use ## only for the chapter title. Use ### or lower for sections within a chapter.",
 }

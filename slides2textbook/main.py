@@ -23,6 +23,8 @@ def main(argv: list[str] | None = None) -> None:
             model=args.model,
             effort = args.effort,
             vision_model=args.vision_model or args.model,
+            prev_chapters=args.prev_chapters,
+            include_outline=args.include_outline,
         )
     except Exception:
         logger.exception("Unhandled error while running Slides2Textbook pipeline")
@@ -38,6 +40,8 @@ def run_pipeline(
     model: str,
     effort: str,
     vision_model: str = "openai/gpt-5.4",
+    prev_chapters: int = 0,
+    include_outline: bool = False,
 ) -> None:
     from slides2textbook import context_loader, llm_tools, md_helper, prompt_builder as pb
     from slides2textbook.llm_classes import LLM_Response
@@ -78,6 +82,8 @@ def run_pipeline(
             idx,
             textbook,
             name,
+            prev_chapters=prev_chapters,
+            include_outline=include_outline,
         )
         response: LLM_Response = llm_tools.generate(system_prompt, chapter_prompt, model_str=model, effort=effort)
         textbook.append(response.output_text)
@@ -99,7 +105,19 @@ def get_chapter_context(
     textbook_idx: int,
     textbook: list[str] | None,
     textbook_name: str,
+    prev_chapters: int = 0,
+    include_outline: bool = False,
 ) -> str:
+    """Build the user prompt for one chapter.
+
+    Args:
+        prev_chapters: How many of the most recent previous chapters to include
+            in full. 0 includes none; a negative value includes all of them.
+        include_outline: Include the headings of previous chapters that are not
+            fully in context, so the model knows what has already been covered.
+    """
+    from slides2textbook import md_helper
+
     parts: list[str] = []
 
     if instructions:
@@ -108,8 +126,30 @@ def get_chapter_context(
         parts.append("\n\n")
 
     if textbook_idx > 0 and textbook:
-        parts.append("Previous chapter:\n")
-        parts.append(textbook[textbook_idx - 1])
+        previous = textbook[:textbook_idx]
+        if prev_chapters < 0:
+            included = previous
+        elif prev_chapters == 0:
+            included = []
+        else:
+            included = previous[-prev_chapters:]
+        outlined = previous[: len(previous) - len(included)]
+
+        if include_outline and outlined:
+            parts.append(
+                "Outline of earlier chapters (headings only, full text not shown). "
+                "Use this to know what has already been covered:\n\n"
+            )
+            outlines = [md_helper.extract_outline(chapter) for chapter in outlined]
+            parts.append("\n\n".join(outline for outline in outlines if outline))
+            parts.append("\n\n")
+
+        if included:
+            if len(included) == 1:
+                parts.append("Previous chapter:\n")
+            else:
+                parts.append(f"Previous {len(included)} chapters:\n")
+            parts.append("\n\n".join(included))
     else:
         parts.append(
             "You are now generating the first chapter of the textbook. "

@@ -8,7 +8,7 @@ Check out the Slides2Textbook [Github Project](https://github.com/users/JamesWHo
 
 This project is **not** production ready. There will be bugs, issues and lack of support. Use at your own risk.
 
-Note that Anthropic models are not currently supported.
+Note that Anthropic models are not currently supported directly, however they can be used via OpenRouter (e.g. `-m openrouter/anthropic/claude-sonnet-5`).
 
 ## Guide
 
@@ -32,10 +32,10 @@ or for updating when there hasn't been a formal update:
 
 API keys are stored and used on your system using something called "Environment Variables". You can set them however you please however if you are inexperienced with this, this is how:
 
-1. Obtain and copy a valid API key from either the [OpenAI API](https://platform.openai.com/) or [Gemini API](https://ai.google.dev/gemini-api/docs).
+1. Obtain and copy a valid API key from the [OpenAI API](https://platform.openai.com/), [Gemini API](https://ai.google.dev/gemini-api/docs) or [OpenRouter](https://openrouter.ai/).
 2. Navigate to the Slides2Textbook directory (if you just following the Installation section you are already likely in the correct directory)
 3. Set the Environment Variables:
-  Use `OPENAI_API_KEY` for OpenAI. `GEMINI_API_KEY` for Google, `ANTHROPIC_API_KEY` for Anthropic.
+  Use `OPENAI_API_KEY` for OpenAI. `GEMINI_API_KEY` for Google, `ANTHROPIC_API_KEY` for Anthropic, `OPENROUTER_API_KEY` for OpenRouter.
    - macOS/Linux: `export PROVIDER_API_KEY="sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (Powershell): `$env:PROVIDER_API_KEY = "sk-...your_key_here..."` (temporary, only for current terminal)
    - Windows (cmd): `set PROVIDER_API_KEY=sk-...your_key_here...` (temporary, only for current terminal)
@@ -58,9 +58,11 @@ Command synopsis (common options):
 - `--no-epub`: Do not generate and save the EPUB file into the output directory.
 - `-v, --verbose`: Increase logging verbosity; repeat for more detail (e.g., `-vv`).
 - `-q, --quiet`: Decrease logging verbosity; repeat to suppress more (e.g., `-qq`).
-- `-m, --model`: Specify the API provider ('openai', 'gemini', or 'anthropic') and model name (e.g. 'gpt-5.4', 'gpt-4.1-mini') in the format of `<provider>/<model>`.
+- `-m, --model`: Specify the API provider ('openai', 'gemini', 'anthropic', or 'openrouter') and model name (e.g. 'gpt-5.4', 'gpt-4.1-mini') in the format of `<provider>/<model>`. For OpenRouter, prefix the full OpenRouter model ID, e.g. `openrouter/openai/gpt-5.4` or `openrouter/anthropic/claude-sonnet-5`.
 - `-e, --effort`: Specify the reasoning effort that the model uses. The model specific must support reasoning controls to be able to use this flag.
 - `--vision-model`: Override the model used for image transcription (defaults to -m). Format: `<provider>/<model>`.
+- `--prev-chapters N`: Number of previously generated chapters to include in full as context when generating each chapter. Default: `0`. Use `-1` to include all previous chapters.
+- `--include-outline`: Include the headings of previous chapters that are not fully in context, so the model knows what has already been covered without the full text.
 - `--log-file PATH`: Also write logs to the specified file.
 
 Examples:
